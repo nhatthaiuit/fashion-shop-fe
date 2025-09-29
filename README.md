@@ -1,16 +1,43 @@
-# React + Vite
+# 🛍️ Fashion Shop - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend cho dự án Fashion Shop (React + Vite).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Yêu cầu hệ thống
+- [Git] 2.50.1.windows.1
+- [Node.js] v22.19.0
+- [npm] 10.9.3
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚙️ Cách chạy (lần đầu)
+1. Clone repo   
 
-## Expanding the ESLint configuration
+   git clone https://github.com/nhatthaiuit/fashion-shop-fe.git
+   cd fashion-shop-fe
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Cài dependency
+
+    npm install
+
+3. Tạo file .env từ mẫu
+
+    cp .env.example .env   # Mac/Linux
+    copy .env.example .env # Windows
+
+4. Sửa .env nếu BE không chạy ở http://localhost:5000
+
+5. Chạy server
+
+    npm run dev
+
+6. Mở link Vite hiện ra (thường là http://localhost:5173)
+
+---
+
+## ✅ Kiểm tra frontend
+
+Mở http://localhost:5173/products → FE sẽ gọi BE qua VITE_API_URL
+
+Nếu thấy danh sách sản phẩm → setup thành công
