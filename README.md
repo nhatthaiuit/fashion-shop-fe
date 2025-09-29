@@ -41,3 +41,12 @@ Frontend cho dự án Fashion Shop (React + Vite).
 Mở http://localhost:5173/products → FE sẽ gọi BE qua VITE_API_URL
 
 Nếu thấy danh sách sản phẩm → setup thành công
+
+## ## 🌍 Environment Variables
+- Local dev: VITE_API_URL=http://localhost:5000
+- Deploy (Vercel): VITE_API_URL= https://fashion-shop-backend.onrender.com/
+
+## Live URLs
+- Web UI: https://fashion-shop-frontend-peach.vercel.app
+- API base: https://fashion-shop-backend.onrender.com/
+- API Docs (Swagger): https://fashion-shop-backend.onrender.com/docs
