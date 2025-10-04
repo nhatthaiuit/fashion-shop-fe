@@ -1,0 +1,35 @@
+.content_accesPay{
+    width: 80%;
+    margin: 0 auto;
+    margin-top:50px;
+    padding-bottom: 50px;
+}
+.center_text_access{
+    text-align: center;
+}
+.title_accesPay{
+    margin-bottom:30px;
+    font-weight: bold;
+}
+.mess_accessPay{
+    font-size: 30px;
+    width: 60%;
+    margin: 0 auto;
+}
+.check_crew,
+.welecome_accessPay{
+    margin: 20px 0;
+}
+.name_web{
+    color:#F05023;
+    font-weight: 600;
+}
+.detail_check_crew{
+    width: 50%;
+    margin: 0 auto;
+    line-height: 30px;
+}
+.thank_acces{
+    margin-top:30px;
+    
+}

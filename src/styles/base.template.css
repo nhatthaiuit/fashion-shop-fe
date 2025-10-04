@@ -1,0 +1,172 @@
+/* =========================
+   BASE TEMPLATE CSS (FULL)
+   ========================= */
+
+/* ---- Reset & Layout ---- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+html, body {
+  margin: 0;                 /* bỏ khoảng trắng rìa */
+  padding: 0;
+  background: #fff;
+}
+img, video, canvas { display: block; max-width: 100%; height: auto; }
+
+/* ---- Fonts (dùng cùng link đã thêm ở index.html) ---- */
+:root{
+  --font-brand: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Montserrat", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Khoảng cách tab mặc định (điều chỉnh tại đây nếu muốn) */
+  --nav-gap: 56px;
+  /* Độ dịch menu sang phải (so với logo) */
+  --nav-offset-right: 120px; /* chỉnh 100–140px theo mắt nhìn */
+}
+
+/* =========================
+   HEADER (thanh đen trên cùng)
+   ========================= */
+.header{
+  background:#000;
+  color:#fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width:100%;
+}
+
+/* Bọc nội dung header: logo | menu | icons */
+.header__inner{
+  width:100%;
+  max-width:none;           /* full-bleed, không giới hạn chiều ngang */
+  margin:0;
+  padding:18px 80px;        /* mép hai bên giống template */
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:32px;
+}
+
+/* Logo bên trái: to & đậm hơn tabs */
+.header__brand,
+.logo_Northside{
+  font-family: var(--font-brand) !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  font-weight:900;
+  font-size:34px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  white-space:nowrap;
+  line-height:1;
+}
+
+/* Bọc nav ở giữa: dịch sang phải bằng margin-left */
+.header__navwrap{
+  flex:1;
+  display:flex;
+  justify-content:flex-start;      /* từ center -> flex-start để cho phép offset */
+  margin-left: var(--nav-offset-right);
+}
+
+/* Menu ngang: khoảng cách tab giống template */
+.header__nav{
+  display:flex;
+  align-items:center;
+  gap: var(--nav-gap);              /* chỉnh khoảng cách tabs ở :root */
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+/* Tab: đậm nhưng nhỏ hơn logo */
+.header__navlink,
+.title_header{
+  font-family: var(--font-ui);
+  color:#fff;
+  text-decoration:none;
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:.5px;
+  line-height:1;
+  transition:opacity .2s ease;
+}
+.header__navlink:hover,
+.title_header:hover{ opacity:.85; }
+
+/* Icons bên phải */
+.header__actions{
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+.header__icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  text-decoration:none;
+  font-size:22px;
+  line-height:1;
+}
+.header__icon--btn{
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  padding:0;
+}
+
+/* Ép link trong header luôn trắng, không gạch chân (ghi đè style mặc định của Vite) */
+.header a{ color:#fff !important; text-decoration:none !important; }
+
+/* =========================
+   SEARCH DROPDOWN (tùy chọn)
+   ========================= */
+.dropdown_header{ position: relative; }
+.dropdown_header .dropdown-content{
+  position: absolute;
+  top: 140%; right: 0;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  padding: 12px 0;
+  display: none;
+}
+.dropdown_header:hover .dropdown-content{ display: block; }
+.dropdown_header input{
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+.icon_while{ color:#fff; }
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 1200px){
+  .header__inner{ padding:16px 48px; }
+  .header__brand{ font-size:30px; }
+  :root{ --nav-gap: 40px; --nav-offset-right: 90px; }
+}
+
+@media (max-width: 900px){
+  .header__inner{ flex-wrap: wrap; row-gap:10px; }
+  .header__brand{ font-size:26px; }
+  .header__navwrap{ order:3; width:100%; margin-left:0; justify-content:center; }
+  .header__nav{ justify-content:center; flex-wrap:wrap; gap:20px; }
+}
+
+/* =========================
+   OPTIONAL: Global link reset
+   (nếu bạn muốn toàn site bỏ màu tím/gạch chân)
+   ========================= */
+/* 
+a{
+  color:inherit;
+  text-decoration:none;
+}
+a:hover{ text-decoration:none; }
+*/

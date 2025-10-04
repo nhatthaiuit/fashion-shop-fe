@@ -1,0 +1,38 @@
+.content_top{
+    width: 95%;
+    margin: 0 auto;
+}
+.contentProducts_navigate{
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.filter_shopAlll{
+    width: 40%;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.home_navigate{
+    color:#969696
+}
+.btn_filter_shopAll{
+    display: flex;
+    justify-content: center;
+
+    padding:10px 50px;
+    border: 0.5px solid #ccc;
+    border-radius: 10px;
+    gap: 10px;
+
+}
+.btn_filter_shopAll:hover{
+    cursor: pointer;
+    background-color: red;
+    color: #fff;
+}
+.product_top{
+    margin-top: 50px;
+}
