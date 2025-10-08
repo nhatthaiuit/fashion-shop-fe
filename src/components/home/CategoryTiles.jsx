@@ -9,6 +9,8 @@ const tiles = [
 export default function CategoryTiles() {
   return (
     <section className="cat-tiles container">
+      
+
       {tiles.map((t) => (
         <Link key={t.label} to={t.to} className="cat-tiles__item">
           <img src={t.img} alt={t.label} className="cat-tiles__img" />

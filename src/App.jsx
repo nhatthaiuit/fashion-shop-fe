@@ -9,7 +9,8 @@ import Accessories from "./pages/Accessories";
 import Sale from "./pages/Sale";
 import Register from "./pages/Register";
 import Cart from "./pages/Cart";
-
+import Top from "./pages/Top";
+import Footer from "./components/layout/Footer";
 export default function App() {
   return (
     <div className="app_wrapper">
@@ -23,8 +24,11 @@ export default function App() {
         <Route path="/sale" element={<Sale />} />
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/top" element={<Top />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        
       </Routes>
+      <Footer />
     </div>
   );
 }

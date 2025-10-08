@@ -5,7 +5,7 @@ export default function Header() {
     <div className="header">
       <div className="header__inner">
         {/* Logo trái */}
-        <Link to="/" className="header__brand">NORTHSIDE CREW</Link>
+        <Link to="/" className="header__brand">ACCESS WORKSHOP</Link>
 
         {/* Menu giữa (khoảng cách giống template) */}
         <nav aria-label="main" className="header__navwrap">

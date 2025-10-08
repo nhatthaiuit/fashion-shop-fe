@@ -1,51 +1,28 @@
-import { useMemo } from "react";
-
+import { useCart } from "../context/CartContext.jsx";
 export default function Cart() {
-  // Demo: đọc cart từ localStorage (nếu bạn đã thêm logic addToCart)
-  const items = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem("cart") || "[]");
-    } catch {
-      return [];
-    }
-  }, []);
-
-  const subtotal = items.reduce((s, it) => s + (it.price || 0) * (it.qty || 1), 0);
-
+  const { cart, setQty, remove, clear } = useCart();
+  const total = cart.reduce((s, it) => s + it.price * it.qty, 0);
   return (
-    <main className="cart_container">
-      <h2 className="section_title">CART</h2>
-
-      {items.length === 0 ? (
-        <p>Giỏ hàng trống.</p>
-      ) : (
+    <div style={{ padding: 20 }}>
+      <h2>CART</h2>
+      {cart.length === 0 ? <p>No product.</p> : (
         <>
-          <div className="cart_list">
-            {items.map((it, idx) => (
-              <div className="cart_item" key={idx}>
-                <img
-                  src={it.image || "/img/products/products_1.jpg"}
-                  alt={it.name}
-                  className="cart_item_image"
-                />
-                <div className="cart_item_info">
-                  <div className="cart_item_name">{it.name}</div>
-                  <div className="cart_item_price">
-                    {(it.price || 0).toLocaleString()}₫ x {it.qty || 1}
-                  </div>
-                </div>
+          {cart.map((it) => (
+            <div key={it._id} style={{ display: "flex", gap: 12, margin: "8px 0" }}>
+              <img src={it.image} alt={it.name} width={80} height={80}/>
+              <div style={{ flex: 1 }}>
+                <div>{it.name}</div>
+                <div>{it.price.toLocaleString()}đ</div>
+                <input type="number" min={1} value={it.qty} onChange={e => setQty(it._id, Number(e.target.value))}/>
               </div>
-            ))}
-          </div>
-
-          <div className="cart_summary">
-            <div className="cart_total">
-              Subtotal: <strong>{subtotal.toLocaleString()}₫</strong>
+              <button onClick={() => remove(it._id)}>Xoá</button>
             </div>
-            <button className="btn_primary">Checkout</button>
-          </div>
+          ))}
+          <hr/>
+          <h3>Tổng: {total.toLocaleString()}đ</h3>
+          <button onClick={clear}>Xoá sạch</button>
         </>
       )}
-    </main>
+    </div>
   );
 }

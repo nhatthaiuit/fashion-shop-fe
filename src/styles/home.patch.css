@@ -14,12 +14,15 @@
   }
   
   /* Hero */
-  .hero { width: 100%; background: var(--nsc-black); }
+  .hero { width: 92%; background: var(--nsc-white); }
   .hero__img {
-    width: 100%;
+    width: 89%;
     height: auto;
     display: block;
     object-fit: cover;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: 20px; 
   }
   
   /* Category tiles */
@@ -45,7 +48,7 @@
   .cat-tiles__title {
     position: absolute;
     inset: auto 0 18px 18px;
-    color: var(--nsc-white);
+    color: var(--nsc-gray-100);
     font-weight: 800;
     font-size: 28px;
     letter-spacing: 2px;
@@ -78,7 +81,7 @@
   /* Card */
   .prd {
     background: var(--nsc-white);
-    border: 1px solid #eee;
+    border: 1px solid #ffffff;
     border-radius: 14px;
     padding: 12px;
     transition: transform .2s ease, box-shadow .2s ease;

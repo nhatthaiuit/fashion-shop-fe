@@ -1,42 +1,35 @@
-// src/pages/ProductDetail.jsx
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+import { useEffect, useState } from "react";
+import { getProductById } from "../api/api";
+import { useCart } from "../context/CartContext.jsx";
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const { add } = useCart();
   const [data, setData] = useState(null);
-  const [status, setStatus] = useState("loading");
+  const [err, setErr] = useState(null);
 
   useEffect(() => {
-    setStatus("loading");
-    axios
-      .get(`${API}/api/products/${id}`)
-      .then((res) => {
-        setData(res.data);
-        setStatus("done");
-      })
-      .catch(() => setStatus("error"));
+    let stop = false;
+    getProductById(id)
+      .then((res) => !stop && setData(res.data))
+      .catch((e) => !stop && setErr(e?.response?.data?.message || e.message));
+    return () => { stop = true; };
   }, [id]);
 
-  if (status === "loading") return <div style={{ padding: 20 }}>Loading...</div>;
-  if (status === "error") return <div style={{ padding: 20 }}>Không tìm thấy sản phẩm.</div>;
+  if (err) return <div style={{ padding: 20, color:"crimson" }}>Lỗi: {String(err)}</div>;
+  if (!data) return <div style={{ padding: 20 }}>Đang tải…</div>;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, padding: 20 }}>
-      <img
-        src={data.image || "/img/products/products_1.jpg"}
-        alt={data.name}
-        style={{ width: "100%", borderRadius: 8 }}
-      />
-      <div>
-        <h1>{data.name}</h1>
-        <p style={{ opacity: 0.8 }}>{data.category}</p>
-        <h2>{typeof data.price === "number" ? data.price.toLocaleString() : data.price}₫</h2>
-        <button style={{ marginTop: 12 }}>Add to cart</button>
-      </div>
+    <div style={{ padding: 20 }}>
+      <img src={data.image} alt={data.name} style={{ width: 360, height: 360, objectFit:"cover" }}/>
+      <h2>{data.name}</h2>
+      <p>{data.price?.toLocaleString()}đ</p>
+      <p>{data.brand} • {data.category}</p>
+      <p>{data.description}</p>
+      <button onClick={() => add(data, 1)} style={{ marginTop: 12 }}>
+        Thêm vào giỏ
+      </button>
     </div>
   );
 }

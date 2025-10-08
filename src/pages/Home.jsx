@@ -22,7 +22,7 @@ export default function Home() {
       <CategoryTiles />
 
       <section className="section container">
-        <h2 className="section__title">NEW ARRIVAL</h2>
+        <h2 className="section__title">SHOP NOW</h2>
         <div className="grid">
           {list.slice(0, 8).map((p) => (
             <ProductCard key={p._id || p.id} p={p} />
