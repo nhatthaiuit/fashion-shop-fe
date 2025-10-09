@@ -108,6 +108,7 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
   text-decoration:none;
   font-size:22px;
   line-height:1;
+  position: relative;
 }
 .header__icon--btn{
   background:transparent;
@@ -159,6 +160,22 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
   .header__nav{ justify-content:center; flex-wrap:wrap; gap:20px; }
 }
 
+
+.header__cartcount {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: crimson;
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 50%;
+  padding: 3px 6px;
+  min-width: 18px;
+  text-align: center;
+  box-shadow: 0 0 0 1px white; /* để viền tách khỏi nền */
+}
 /* =========================
    OPTIONAL: Global link reset
    (nếu bạn muốn toàn site bỏ màu tím/gạch chân)

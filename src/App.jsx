@@ -26,7 +26,6 @@ export default function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/top" element={<Top />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-        
       </Routes>
       <Footer />
     </div>

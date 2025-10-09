@@ -1,6 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
-
+import { useCart } from "../../context/CartContext.jsx";
 export default function Header() {
+  const { cart } = useCart();
+  const totalQty = cart.reduce((sum, it) => sum + it.qty, 0);
+
+
   return (
     <div className="header">
       <div className="header__inner">
@@ -10,7 +14,7 @@ export default function Header() {
         {/* Menu giữa (khoảng cách giống template) */}
         <nav aria-label="main" className="header__navwrap">
           <ul className="header__nav">
-            <li><NavLink to="/" className="header__navlink">HOME</NavLink></li>
+            <li><NavLink to="/products" className="header__navlink">PRODUCTS</NavLink></li>
             <li><NavLink to="/top" className="header__navlink">TOP</NavLink></li>
             <li><NavLink to="/bottom" className="header__navlink">BOTTOM</NavLink></li>
             <li><NavLink to="/accessories" className="header__navlink">ACCESSORIES</NavLink></li>
@@ -30,6 +34,11 @@ export default function Header() {
 
           {/* bag/briefcase */}
           <Link to="/cart" aria-label="Cart" className="header__icon">
+            {/* Badge hiển thị số lượng */}
+              {totalQty > 0 && (
+              <span className="header__cartcount">{totalQty}</span>
+              )}
+
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M6 7h12l1 12H5L6 7Z" stroke="white" strokeWidth="2" strokeLinejoin="round"/>
               <path d="M9 7a3 3 0 0 1 6 0" stroke="white" strokeWidth="2" strokeLinecap="round"/>
