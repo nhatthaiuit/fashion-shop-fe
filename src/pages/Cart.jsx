@@ -1,6 +1,6 @@
 // src/pages/Cart.jsx
 import { useCart } from "../context/CartContext.jsx";
-
+import { Link } from "react-router-dom";
 export default function Cart() {
   const { cart, setQty, remove, clear } = useCart();
   const total = cart.reduce((s, it) => s + it.price * it.qty, 0);
@@ -47,6 +47,7 @@ export default function Cart() {
       <hr style={{ margin: "20px 0" }} />
       <h3>Tổng cộng: {total.toLocaleString()}đ</h3>
       <button onClick={clear}>Xoá tất cả</button>
+      <Link to="/checkout" style={{ marginLeft: 12, fontWeight: 700 }}>Thanh toán →</Link>
     </main>
   );
 }

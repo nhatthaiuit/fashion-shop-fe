@@ -10,6 +10,8 @@ import Sale from "./pages/Sale";
 import Register from "./pages/Register";
 import Cart from "./pages/Cart";
 import Top from "./pages/Top";
+import Checkout from "./pages/Checkout";
+import ThankYou from "./pages/ThankYou";
 import Footer from "./components/layout/Footer";
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/top" element={<Top />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/checkout" element={<Checkout />} />
+
       </Routes>
       <Footer />
     </div>
