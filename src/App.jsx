@@ -29,7 +29,7 @@ export default function App() {
         <Route path="/top" element={<Top />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/checkout" element={<Checkout />} />
-
+        <Route path="/thank-you" element={<ThankYou />} />  
       </Routes>
       <Footer />
     </div>
