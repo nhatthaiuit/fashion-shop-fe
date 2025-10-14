@@ -5,26 +5,26 @@
 /* ---- Reset & Layout ---- */
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
-html, body {
-  margin: 0;                 /* bỏ khoảng trắng rìa */
-  padding: 0;
-  background: #fff;
-}
+html, body { margin: 0; padding: 0; background: #fff; }
 img, video, canvas { display: block; max-width: 100%; height: auto; }
 
-/* ---- Fonts (dùng cùng link đã thêm ở index.html) ---- */
+/* ---- Fonts & Layout Vars ---- */
 :root{
   --font-brand: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-ui: "Montserrat", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* Khoảng cách tab mặc định (điều chỉnh tại đây nếu muốn) */
-  --nav-gap: 56px;
-  /* Độ dịch menu sang phải (so với logo) */
-  --nav-offset-right: 120px; /* chỉnh 100–140px theo mắt nhìn */
+  /* Khoảng cách giữa các tab */
+  --nav-gap: 32px;
+
+  /* NEW: padding hai bên header (mép trái = mép phải) */
+  --side-pad: 72px;         /* tăng/giảm để chỉnh khoảng cách tới mép màn hình */
+
+  /* NEW: độ rộng khối bên trái (logo) & bên phải (icons) để NAV nằm đúng tâm */
+  --side-width: 260px;      /* 240–280px tuỳ logo dài/ngắn */
 }
 
 /* =========================
-   HEADER (thanh đen trên cùng)
+   HEADER
    ========================= */
 .header{
   background:#000;
@@ -38,48 +38,58 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
 /* Bọc nội dung header: logo | menu | icons */
 .header__inner{
   width:100%;
-  max-width:none;           /* full-bleed, không giới hạn chiều ngang */
+  max-width:none;
   margin:0;
-  padding:18px 80px;        /* mép hai bên giống template */
+
+  /* Cao hơn một xíu & mép hai bên bằng nhau */
+  padding: 22px var(--side-pad);   /* ↑ 16px → 22px để header cao hơn */
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:32px;
+  gap:24px;
 }
 
-/* Logo bên trái: to & đậm hơn tabs */
+/* Logo bên trái */
 .header__brand,
 .logo_Northside{
   font-family: var(--font-brand) !important;
   color:#fff !important;
   text-decoration:none !important;
-  font-weight:900;
-  font-size:34px;
-  letter-spacing:1.2px;
+  font-weight:700;
+  font-size:30px;
+  letter-spacing:0.5px;
   text-transform:uppercase;
   white-space:nowrap;
   line-height:1;
+
+  /* NEW: cố định bề rộng bên trái để cân với icons bên phải */
+  flex: 0 0 var(--side-width);
+  min-width: var(--side-width);
 }
 
-/* Bọc nav ở giữa: dịch sang phải bằng margin-left */
+/* Bọc nav ở giữa: thật sự căn giữa (không dùng offset) */
 .header__navwrap{
-  flex:1;
+  flex: 1 1 auto;
   display:flex;
-  justify-content:flex-start;      /* từ center -> flex-start để cho phép offset */
-  margin-left: var(--nav-offset-right);
+  justify-content:center;
+
+  /* Bỏ mọi offset cũ */
+  margin-left: 220px;
 }
 
-/* Menu ngang: khoảng cách tab giống template */
+/* Menu ngang */
 .header__nav{
   display:flex;
   align-items:center;
-  gap: var(--nav-gap);              /* chỉnh khoảng cách tabs ở :root */
+  gap: var(--nav-gap);
   list-style:none;
   margin:0;
   padding:0;
+  justify-content:center;
 }
 
-/* Tab: đậm nhưng nhỏ hơn logo */
+/* Tab */
 .header__navlink,
 .title_header{
   font-family: var(--font-ui);
@@ -98,7 +108,12 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
 .header__actions{
   display:flex;
   align-items:center;
-  gap:22px;
+  gap:20px;
+
+  /* NEW: bề rộng bằng logo để NAV cân tuyệt đối ở giữa */
+  flex: 0 0 var(--side-width);
+  min-width: var(--side-width);
+  justify-content:flex-end;
 }
 .header__icon{
   display:inline-flex;
@@ -117,7 +132,7 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
   padding:0;
 }
 
-/* Ép link trong header luôn trắng, không gạch chân (ghi đè style mặc định của Vite) */
+/* Link trong header luôn trắng, không gạch chân */
 .header a{ color:#fff !important; text-decoration:none !important; }
 
 /* =========================
@@ -147,20 +162,53 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
 /* =========================
    RESPONSIVE
    ========================= */
+@media (max-width: 1440px){
+  :root{
+    --nav-gap: 32px;
+    --side-pad: 64px;
+    --side-width: 240px;
+  }
+}
+
+@media (max-width: 1280px){
+  :root{
+    --nav-gap: 30px;
+    --side-pad: 56px;
+    --side-width: 220px;
+  }
+}
+
 @media (max-width: 1200px){
-  .header__inner{ padding:16px 48px; }
+  .header__inner{ padding: 20px var(--side-pad); }
   .header__brand{ font-size:30px; }
-  :root{ --nav-gap: 40px; --nav-offset-right: 90px; }
+  :root{
+    --nav-gap: 30px;
+    --side-pad: 48px;
+    --side-width: 200px;
+  }
 }
 
 @media (max-width: 900px){
-  .header__inner{ flex-wrap: wrap; row-gap:10px; }
-  .header__brand{ font-size:26px; }
-  .header__navwrap{ order:3; width:100%; margin-left:0; justify-content:center; }
+  .header__inner{ flex-wrap: wrap; row-gap:10px; padding: 16px var(--side-pad); }
+  .header__brand{
+    font-size:26px;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+  .header__navwrap{
+    order:3; width:100%;
+    justify-content:center;
+  }
   .header__nav{ justify-content:center; flex-wrap:wrap; gap:20px; }
+  .header__actions{
+    flex: 0 0 auto; min-width: 0;
+    justify-content:flex-end;
+  }
 }
 
-
+/* =========================
+   CART BADGE
+   ========================= */
 .header__cartcount {
   position: absolute;
   top: -6px;
@@ -174,16 +222,41 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
   padding: 3px 6px;
   min-width: 18px;
   text-align: center;
-  box-shadow: 0 0 0 1px white; /* để viền tách khỏi nền */
+  box-shadow: 0 0 0 1px white;
 }
+
 /* =========================
    OPTIONAL: Global link reset
-   (nếu bạn muốn toàn site bỏ màu tím/gạch chân)
    ========================= */
-/* 
-a{
-  color:inherit;
-  text-decoration:none;
-}
+/*
+a{ color:inherit; text-decoration:none; }
 a:hover{ text-decoration:none; }
 */
+
+/* ========== FULL-BLEED BANNER (no side gaps) ========== */
+/* Dùng khi banner đang nằm trong container có padding (side-pad) */
+.home-banner{
+  /* cho phần banner tràn ngang toàn màn hình, bất kể cha có padding */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+  max-width: 100vw;
+  /* bỏ mọi khoảng thừa trên/dưới nếu có */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.home-banner .banner-image{
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;     /* nếu ảnh crop theo chiều cao */
+  /* xoá mọi khoảng trống ảnh/inline */
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
