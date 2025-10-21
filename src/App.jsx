@@ -13,7 +13,7 @@ import Top from "./pages/Top";
 import Checkout from "./pages/Checkout";
 import ThankYou from "./pages/ThankYou";
 import Footer from "./components/layout/Footer";
-import AdminRoute from './admin/route'
+import AppAdmin from "./admin/AppAdmin.jsx";
 export default function App() {
   return (
     <div className="app_wrapper">
@@ -31,7 +31,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/thank-you" element={<ThankYou />} />  
-        <Route path="/admin/*" element={<AdminRoute/>} />
+        <Route path="/admin/*" element={<AppAdmin />} />
         
         <Route path="*" element={<div className="p-6">Not Found</div>} />
       </Routes>
