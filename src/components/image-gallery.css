@@ -1,0 +1,6 @@
+.ig-wrap { display: grid; gap: .75rem; }
+.ig-main img { width: 100%; border-radius: 12px; object-fit: cover; }
+.ig-thumbs { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .25rem; }
+.ig-thumb { border: 2px solid transparent; border-radius: 8px; padding: 0; background: none; }
+.ig-thumb.active { border-color: #111; }
+.ig-thumb img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; display: block; }

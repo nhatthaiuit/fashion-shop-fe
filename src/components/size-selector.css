@@ -1,0 +1,16 @@
+.size-wrap { display: flex; gap: .5rem; flex-wrap: wrap; }
+.size-btn {
+  position: relative;
+  min-width: 44px; height: 36px;
+  border: 1px solid #ddd; border-radius: 8px; padding: 0 .5rem;
+  background: #fff; cursor: pointer; font-weight: 600;
+}
+.size-btn.active { border-color: #111; box-shadow: 0 0 0 2px rgba(0,0,0,.08) inset; }
+.size-btn.disabled {
+  color: #aaa; background: #f6f6f6; cursor: not-allowed; border-color: #eee; 
+}
+.size-btn.disabled .size-text { text-decoration: line-through; }
+.size-cross {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: #c4c4c4; font-size: 12px; pointer-events: none;
+}

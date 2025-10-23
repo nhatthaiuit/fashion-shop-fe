@@ -1,3 +1,4 @@
+// src/pages/Products.jsx
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
@@ -13,6 +14,7 @@ export default function Products() {
   const [err, setErr] = useState(null);
   const { add } = useCart();
 
+  // giữ phân trang/sort như cũ
   const params = useMemo(() => ({ page: 1, limit: 12, sort: "newest" }), []);
 
   useEffect(() => {
@@ -40,43 +42,64 @@ export default function Products() {
     return () => {
       stop = true;
     };
-  }, [API, params]);
+  }, [params]); // API là hằng, không cần đưa vào deps
 
   if (loading) return <div className="loading">Đang tải sản phẩm…</div>;
   if (err) return <div className="error">Lỗi: {String(err)}</div>;
+
+  // ✅ Đẩy sản phẩm hết hàng xuống cuối (client-side)
+  const sortedItems = [...items].sort((a, b) => {
+    const A = (a.countInStock ?? 0) <= 0 ? 1 : 0;
+    const B = (b.countInStock ?? 0) <= 0 ? 1 : 0;
+    if (A !== B) return A - B; // hết hàng (1) xuống dưới
+    return 0;
+  });
 
   return (
     <main className="products_page">
       <h2 className="products_title">TẤT CẢ SẢN PHẨM</h2>
 
       <div className="products_grid">
-        {items.map((p) => (
-          <div key={p._id || p.name} className="product_card">
-            {/* 🖼️ Bọc ảnh và tên trong Link */}
-            <Link to={`/products/${p._id}`} className="product_link">
-              <div className="product_image_wrapper">
-                <img
-                  src={p.image || "/img/products/default.jpg"}
-                  alt={p.name}
-                  onError={(e) =>
-                    (e.currentTarget.src = "/img/products/default.jpg")
-                  }
-                />
-              </div>
-              <div className="product_info">
-                <div className="product_name">{p.name}</div>
-                <div className="product_price">
-                  {Number(p.price || 0).toLocaleString()}đ
+        {sortedItems.map((p) => {
+          const out = (p.countInStock ?? 0) <= 0;
+          return (
+            <div
+              key={p._id || p.name}
+              className={`product_card ${out ? "out-of-stock" : ""}`}
+              title={out ? "Hết hàng" : ""}
+            >
+              <Link to={`/products/${p._id}`} className="product_link">
+                <div className="product_image_wrapper">
+                  {/* Badge Hết hàng */}
+                  {out && <span className="badge_oos">Hết hàng</span>}
+                  <img
+                    src={p.image || "/img/products/default.jpg"}
+                    alt={p.name}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/img/products/default.jpg")
+                    }
+                  />
                 </div>
-              </div>
-            </Link>
 
-            {/* Nút thêm giỏ hàng */}
-            <button className="btn_add" onClick={() => add(p, 1)}>
-              + Thêm vào giỏ
-            </button>
-          </div>
-        ))}
+                <div className="product_info">
+                  <div className="product_name">{p.name}</div>
+                  <div className="product_price">
+                    {Number(p.price || 0).toLocaleString()}đ
+                  </div>
+                </div>
+              </Link>
+
+              {/* Nút thêm giỏ: disable khi hết hàng */}
+              <button
+                className="btn_add"
+                disabled={out}
+                onClick={() => add(p, 1)}
+              >
+                {out ? "Hết hàng" : "+ Thêm vào giỏ"}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {meta && (

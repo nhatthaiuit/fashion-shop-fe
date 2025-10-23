@@ -85,3 +85,33 @@
   padding: 80px 0;
   font-size: 18px;
 }
+
+
+/* Card mờ & xám khi hết hàng */
+.product_card.out-of-stock {
+  opacity: .7;
+  filter: grayscale(0.25);
+}
+
+/* Badge “Hết hàng” trên ảnh */
+.product_image_wrapper {
+  position: relative;
+}
+.badge_oos {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  z-index: 2;
+}
+
+/* Disable style cho button */
+.btn_add:disabled {
+  background: #e9e9e9;
+  color: #888;
+  cursor: not-allowed;
+}
