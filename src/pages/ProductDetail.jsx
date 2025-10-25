@@ -1,35 +1,28 @@
 // src/pages/ProductDetail.jsx
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
 import "../styles/detail.template.css";
-import { Link } from "react-router-dom";
 
-// Component chọn size (tích hợp sẵn trong file này)
+// ========== SizeSelector (không tự bơm S/M/L 0 stock) ==========
 function SizeSelector({ sizes = [], onChange }) {
   const [selected, setSelected] = useState(null);
 
-  const options = sizes.length
-    ? sizes
-    : [
-        { label: "S", stock: 0 },
-        { label: "M", stock: 0 },
-        { label: "L", stock: 0 },
-      ];
+  if (!Array.isArray(sizes) || sizes.length === 0) {
+    return null; // không render nếu không có size
+  }
 
   return (
     <div className="size-selector">
-      {options.map(({ label, stock }) => {
-        const disabled = stock <= 0;
+      {sizes.map(({ label, stock }) => {
+        const disabled = (stock || 0) <= 0;
         const active = selected === label;
         return (
           <button
             key={label}
             type="button"
-            className={`size-btn ${active ? "active" : ""} ${
-              disabled ? "disabled" : ""
-            }`}
+            className={`size-btn ${active ? "active" : ""} ${disabled ? "disabled" : ""}`}
             disabled={disabled}
             onClick={() => {
               setSelected(label);
@@ -44,11 +37,12 @@ function SizeSelector({ sizes = [], onChange }) {
   );
 }
 
-// Component hiển thị ảnh chính + gallery ảnh phụ
+// ========== ImageGallery ==========
 function ImageGallery({ main, images = [] }) {
   const all = images?.length ? [main, ...images] : [main].filter(Boolean);
   const [current, setCurrent] = useState(all[0]);
   if (!all.length) return null;
+
   return (
     <div className="image-gallery">
       <div className="main-image">
@@ -75,21 +69,23 @@ const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [qty, setQty] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { add } = useCart();
+
+  const [product, setProduct]   = useState(null);
+  const [qty, setQty]           = useState(1);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [related, setRelated]   = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState(null);
 
   // Load sản phẩm hiện tại
   useEffect(() => {
     setLoading(true);
+    setError(null);
     axios
       .get(`${API}/api/products/${id}`)
       .then((res) => setProduct(res.data))
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(err?.response?.data?.message || err.message))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -99,22 +95,51 @@ export default function ProductDetail() {
     axios
       .get(`${API}/api/products?category=${encodeURIComponent(product.category)}&limit=8`)
       .then((res) => {
-        const list = Array.isArray(res.data.items)
+        const list = Array.isArray(res.data?.items)
           ? res.data.items
           : Array.isArray(res.data)
           ? res.data
-          : res.data.data || [];
+          : res.data?.data || [];
         const filtered = list.filter((x) => x._id !== product._id);
         setRelated(filtered.slice(0, 6));
       })
       .catch(() => {});
   }, [product?.category, product?._id]);
 
-  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
-  if (error) return <div className="error">Lỗi tải sản phẩm: {error}</div>;
-  if (!product) return <div className="error">Không tìm thấy sản phẩm</div>;
+  // ===== Logic hiển thị theo category/sizes =====
+  const needSize = useMemo(
+    () => ["Top", "Bottom"].includes(product?.category),
+    [product?.category]
+  );
+  const hasSizes = useMemo(
+    () => Array.isArray(product?.sizes) && product.sizes.length > 0,
+    [product?.sizes]
+  );
+  const canSelectSize = needSize && hasSizes;
 
-  const outOfStock = product.countInStock <= 0;
+  // tồn hiện có
+  const stockAvailable = useMemo(() => {
+    if (!product) return false;
+    if (canSelectSize) {
+      return product.sizes.some((s) => (s.stock || 0) > 0);
+    }
+    return (product.countInStock || 0) > 0;
+  }, [product, canSelectSize]);
+
+  const outOfStock = !stockAvailable;
+
+  // max theo size đã chọn hoặc countInStock
+  const selectedSizeStock = useMemo(() => {
+    if (!product) return 0;
+    if (canSelectSize && selectedSize) {
+      return product.sizes.find((s) => s.label === selectedSize)?.stock || 0;
+    }
+    return product.countInStock || 99;
+  }, [product, canSelectSize, selectedSize]);
+
+  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
+  if (error)   return <div className="error">Lỗi tải sản phẩm: {error}</div>;
+  if (!product) return <div className="error">Không tìm thấy sản phẩm</div>;
 
   return (
     <main className="product_detail_page">
@@ -127,6 +152,7 @@ export default function ProductDetail() {
         {/* Thông tin sản phẩm */}
         <div className="product_detail_info">
           <h2 className="product_detail_name">{product.name}</h2>
+
           <div className="product_detail_price">
             {Number(product.price || 0).toLocaleString()}đ
           </div>
@@ -135,11 +161,19 @@ export default function ProductDetail() {
             {product.description || "Không có mô tả"}
           </p>
 
-          {/* Chọn size */}
-          <div className="product_detail_size">
-            <label>Chọn size:</label>
-            <SizeSelector sizes={product.sizes} onChange={setSelectedSize} />
-          </div>
+          {/* Chọn size: chỉ render khi cần & có sizes */}
+          {canSelectSize && (
+            <div className="product_detail_size">
+              <label>Chọn size:</label>
+              <SizeSelector sizes={product.sizes} onChange={setSelectedSize} />
+            </div>
+          )}
+          {/* Cảnh báo nếu cần size nhưng chưa cấu hình */}
+          {needSize && !hasSizes && (
+            <p style={{ color: "#b45309", marginTop: 6 }}>
+              Sản phẩm thuộc nhóm cần size (Top/Bottom) nhưng chưa cấu hình <code>sizes</code>.
+            </p>
+          )}
 
           {/* Số lượng */}
           <div className="product_detail_qty">
@@ -147,9 +181,9 @@ export default function ProductDetail() {
             <input
               type="number"
               min={1}
-              max={product.countInStock || 99}
+              max={selectedSizeStock}
               value={qty}
-              onChange={(e) => setQty(Number(e.target.value))}
+              onChange={(e) => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedSizeStock)))}
               disabled={outOfStock}
             />
           </div>
@@ -157,43 +191,45 @@ export default function ProductDetail() {
           {/* Nút thêm vào giỏ */}
           <button
             className="btn_add_to_cart"
-            disabled={outOfStock || (product.sizes?.length && !selectedSize)}
+            disabled={outOfStock || (canSelectSize && !selectedSize)}
             onClick={() => add({ ...product, selectedSize }, qty)}
+            title={outOfStock ? "Hết hàng" : (canSelectSize && !selectedSize ? "Vui lòng chọn size" : "Thêm vào giỏ")}
           >
             {outOfStock ? "Hết hàng" : "+ Thêm vào giỏ hàng"}
           </button>
         </div>
       </div>
 
+      {/* Related */}
       {related.length > 0 && (
-  <section className="related_section">
-    <h3 className="related_title">Gợi ý sản phẩm cùng loại</h3>
+        <section className="related_section">
+          <h3 className="related_title">Gợi ý cho bạn</h3>
 
-    <div className="related_grid">
-      {related.map((p) => (
-        <Link
-          key={p._id}
-          to={`/products/${p._id}`}
-          className="related_card related_link"
-        >
-          <div className="related_media">
-            <img
-              src={p.image || "/img/products/default.jpg"}
-              alt={p.name}
-              onError={(e) => (e.currentTarget.src = "/img/products/default.jpg")}
-            />
+          <div className="related_grid">
+            {related.map((p) => (
+              <Link
+                key={p._id}
+                to={`/products/${p._id}`}
+                className="related_card related_link"
+              >
+                <div className="related_media">
+                  <img
+                    src={p.image || "/img/products/default.jpg"}
+                    alt={p.name}
+                    onError={(e) => (e.currentTarget.src = "/img/products/default.jpg")}
+                  />
+                </div>
+                <div className="related_body">
+                  <div className="related_name">{p.name}</div>
+                  <div className="related_price">
+                    {Number(p.price || 0).toLocaleString()}đ
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-          <div className="related_body">
-            <div className="related_name">{p.name}</div>
-            <div className="related_price">
-              {Number(p.price || 0).toLocaleString()}đ
-            </div>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </section>
-)}
+        </section>
+      )}
     </main>
   );
 }
