@@ -37,7 +37,7 @@ function buildQuery(params = {}) {
 
 /** Wrapper fetch: tự gắn Authorization nếu có token */
 async function req(path, { method = 'GET', body, headers = {} } = {}) {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers: {
