@@ -27,7 +27,7 @@ export default function Checkout() {
   const shippingFee = 0;
   const total = subtotal + shippingFee;
 
-  const [form, setForm] = useState({ full_name: "", phone: "", address: "", note: "" });
+  const [form, setForm] = useState({ fullName: "", phone: "", address: "", note: "" });
   const [placing, setPlacing] = useState(false);
   const [err, setErr] = useState("");
 
@@ -37,7 +37,7 @@ export default function Checkout() {
     e.preventDefault();
     setErr("");
 
-    if (!form.full_name.trim() || !form.phone.trim() || !form.address.trim()) {
+    if (!form.fullName.trim() || !form.phone.trim() || !form.address.trim()) {
       setErr("Vui lòng điền Họ tên, SĐT và Địa chỉ.");
       return;
     }
@@ -51,6 +51,8 @@ export default function Checkout() {
 
       const payload = {
         shipping_address: form.address,
+        phone: form.phone,               // 👈 thêm dòng này
+        customer_name: form.fullName,  
         items: cart.map((it) => ({ product: it._id, qty: it.qty })), // gửi _id thật
       };
 
@@ -83,7 +85,7 @@ export default function Checkout() {
         <form onSubmit={handleSubmit}>
           <h3>Thông tin nhận hàng</h3>
           <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-            <input name="full_name" placeholder="Họ và tên" value={form.full_name} onChange={onChange} />
+            <input name="fullName" placeholder="Họ và tên" value={form.fullName} onChange={onChange} />
             <input name="phone" placeholder="Số điện thoại" value={form.phone} onChange={onChange} />
             <input name="address" placeholder="Địa chỉ" value={form.address} onChange={onChange} />
             <textarea name="note" placeholder="Ghi chú (không bắt buộc)" rows={3} value={form.note} onChange={onChange} />
