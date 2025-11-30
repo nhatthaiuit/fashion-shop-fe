@@ -19,7 +19,7 @@ export default function Navbar() {
         letterSpacing: "1px" 
         }}
       >
-      NORTHSIDE CREW
+      ACCESS WORKSHOP
       </Link>
 
       {/* Tabs điều hướng */}
