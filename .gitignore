@@ -1,3 +1,7 @@
+# System Files
+.DS_Store
+Thumbs.db
+
 # Logs
 logs
 *.log
@@ -6,6 +10,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+# Junk
+*.txt
+
 **/node_modules/
 node_modules
 .env
