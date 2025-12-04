@@ -28,7 +28,7 @@ export default function SizeSelector({ sizes = [], onChange }) {
             className={`size-btn ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
             disabled={disabled}
             onClick={() => setSelected(label)}
-            title={disabled ? 'Hết hàng' : `Còn ${stock}`}
+            title={disabled ? 'Out of Stock' : `In stock: ${stock}`}
           >
             <span className="size-text">{label}</span>
             {disabled && <span className="size-cross" aria-hidden>╳</span>}

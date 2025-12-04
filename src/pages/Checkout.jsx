@@ -38,11 +38,11 @@ export default function Checkout() {
     setErr("");
 
     if (!form.fullName.trim() || !form.phone.trim() || !form.address.trim()) {
-      setErr("Vui lòng điền Họ tên, SĐT và Địa chỉ.");
+      setErr("Please fill in Full Name, Phone, and Address.");
       return;
     }
     if (!cart.length) {
-      setErr("Giỏ hàng trống.");
+      setErr("Cart is empty.");
       return;
     }
 
@@ -52,7 +52,7 @@ export default function Checkout() {
       const payload = {
         shipping_address: form.address,
         phone: form.phone,               // 👈 thêm dòng này
-        customer_name: form.fullName,  
+        customer_name: form.fullName,
         items: cart.map((it) => ({ product: it._id, qty: it.qty })), // gửi _id thật
       };
 
@@ -71,7 +71,7 @@ export default function Checkout() {
       nav(`/thank-you/`, { replace: true, state: { order: data } });
     } catch (e) {
       console.error("Checkout error:", e);
-      setErr(e?.response?.data?.message || e.message || "Lỗi kết nối server");
+      setErr(e?.response?.data?.message || e.message || "Server connection error");
     } finally {
       setPlacing(false);
     }
@@ -79,16 +79,16 @@ export default function Checkout() {
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h2>Thanh toán</h2>
+      <h2>Checkout</h2>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
         <form onSubmit={handleSubmit}>
-          <h3>Thông tin nhận hàng</h3>
+          <h3>Shipping Information</h3>
           <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-            <input name="fullName" placeholder="Họ và tên" value={form.fullName} onChange={onChange} />
-            <input name="phone" placeholder="Số điện thoại" value={form.phone} onChange={onChange} />
-            <input name="address" placeholder="Địa chỉ" value={form.address} onChange={onChange} />
-            <textarea name="note" placeholder="Ghi chú (không bắt buộc)" rows={3} value={form.note} onChange={onChange} />
+            <input name="fullName" placeholder="Full Name" value={form.fullName} onChange={onChange} />
+            <input name="phone" placeholder="Phone Number" value={form.phone} onChange={onChange} />
+            <input name="address" placeholder="Address" value={form.address} onChange={onChange} />
+            <textarea name="note" placeholder="Note (optional)" rows={3} value={form.note} onChange={onChange} />
           </div>
           {err && <div style={{ color: "crimson", marginTop: 8 }}>{err}</div>}
 
@@ -106,12 +106,12 @@ export default function Checkout() {
               cursor: "pointer",
             }}
           >
-            {placing ? "Đang đặt hàng..." : "Đặt hàng"}
+            {placing ? "Placing order..." : "Place Order"}
           </button>
         </form>
 
         <aside style={{ border: "1px solid #eee", borderRadius: 10, padding: 16, height: "fit-content" }}>
-          <h3>Đơn hàng</h3>
+          <h3>Order Summary</h3>
           <div style={{ display: "grid", gap: 8, marginTop: 8 }}>
             {cart.map((it) => (
               <div key={it._id} style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -126,15 +126,15 @@ export default function Checkout() {
             ))}
             <hr />
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Tạm tính</span>
+              <span>Subtotal</span>
               <span>{subtotal.toLocaleString()}đ</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Phí vận chuyển</span>
+              <span>Shipping Fee</span>
               <span>{shippingFee.toLocaleString()}đ</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: 18 }}>
-              <span>Tổng</span>
+              <span>Total</span>
               <span>{total.toLocaleString()}đ</span>
             </div>
           </div>

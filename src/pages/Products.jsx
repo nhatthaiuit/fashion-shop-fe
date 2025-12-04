@@ -44,8 +44,8 @@ export default function Products() {
     };
   }, [params]); // API là hằng, không cần đưa vào deps
 
-  if (loading) return <div className="loading">Đang tải sản phẩm…</div>;
-  if (err) return <div className="error">Lỗi: {String(err)}</div>;
+  if (loading) return <div className="loading">Loading products...</div>;
+  if (err) return <div className="error">Error: {String(err)}</div>;
 
   // ✅ Đẩy sản phẩm hết hàng xuống cuối (client-side)
   const sortedItems = [...items].sort((a, b) => {
@@ -57,7 +57,7 @@ export default function Products() {
 
   return (
     <main className="products_page">
-      <h2 className="products_title">TẤT CẢ SẢN PHẨM</h2>
+      <h2 className="products_title">ALL PRODUCTS</h2>
 
       <div className="products_grid">
         {sortedItems.map((p) => {
@@ -66,12 +66,12 @@ export default function Products() {
             <div
               key={p._id || p.name}
               className={`product_card ${out ? "out-of-stock" : ""}`}
-              title={out ? "Hết hàng" : ""}
+              title={out ? "Out of Stock" : ""}
             >
               <Link to={`/products/${p._id}`} className="product_link">
                 <div className="product_image_wrapper">
-                  {/* Badge Hết hàng */}
-                  {out && <span className="badge_oos">Hết hàng</span>}
+                  {/* Badge Out of Stock */}
+                  {out && <span className="badge_oos">Out of Stock</span>}
                   <img
                     src={p.image || "/img/products/default.jpg"}
                     alt={p.name}
@@ -95,7 +95,7 @@ export default function Products() {
                 disabled={out}
                 onClick={() => add(p, 1)}
               >
-                {out ? "Hết hàng" : "+ Thêm vào giỏ"}
+                {out ? "Out of Stock" : "+ Add to Cart"}
               </button>
             </div>
           );
@@ -104,7 +104,7 @@ export default function Products() {
 
       {meta && (
         <div style={{ textAlign: "center", marginTop: 16 }}>
-          Trang {meta.page} / {meta.totalPages}
+          Page {meta.page} / {meta.totalPages}
         </div>
       )}
     </main>

@@ -24,8 +24,8 @@ export default function CategoryPage({ title, category }) {
       .finally(() => setLoading(false));
   }, [category]);
 
-  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
-  if (err) return <div className="error">Lỗi: {err}</div>;
+  if (loading) return <div className="loading">Loading products...</div>;
+  if (err) return <div className="error">Error: {err}</div>;
 
   return (
     <main className="products_page">
@@ -33,7 +33,7 @@ export default function CategoryPage({ title, category }) {
 
       <div className="products_grid">
         {list.length === 0 ? (
-          <p>Không có sản phẩm nào trong mục này.</p>
+          <p>No products found in this category.</p>
         ) : (
           list.map((p) => (
             <div key={p._id} className="product_card">
@@ -47,7 +47,7 @@ export default function CategoryPage({ title, category }) {
                 </div>
               </Link>
               <button className="btn_add" onClick={() => add(p, 1)}>
-                + Thêm vào giỏ
+                + Add to Cart
               </button>
             </div>
           ))

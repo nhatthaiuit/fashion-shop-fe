@@ -12,13 +12,14 @@ export default defineConfig(({ mode }) => {
         configureServer(server) {
           const _printUrls = server.printUrls
           server.printUrls = () => {
-            _printUrls()
+            // _printUrls() // Không gọi hàm mặc định để tránh lặp
             const deployUrl = env.VITE_DEPLOY_URL || "https://fashion-shop-frontend.vercel.app" // Fallback or empty
 
             console.log(`  ➜  🚀 LOCAL:      http://localhost:${server.config.server.port || 5173}/`)
             if (deployUrl) {
               console.log(`  ➜  🌍 DEPLOYMENT: ${deployUrl}/`)
             }
+            console.log(`  ➜  👉 Press h + enter to show help`)
           }
         }
       }

@@ -24,7 +24,7 @@ export default function ProductCard({ p }) {
           </div>
         </div>
       </Link>
-      <button className="btn btn--primary prd__btn">Thêm vào giỏ</button>
+      <button className="btn btn--primary prd__btn">Add to Cart</button>
     </div>
   );
 }

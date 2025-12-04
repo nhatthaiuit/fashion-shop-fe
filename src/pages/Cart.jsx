@@ -8,14 +8,14 @@ export default function Cart() {
   if (cart.length === 0)
     return (
       <main style={{ padding: 40, textAlign: "center" }}>
-        <h2>Giỏ hàng trống</h2>
-        <p>Hãy thêm vài sản phẩm vào giỏ nhé 🛍️</p>
+        <h2>Your cart is empty</h2>
+        <p>Add some products to your cart 🛍️</p>
       </main>
     );
 
   return (
     <main style={{ padding: 40 }}>
-      <h2>🛒 Giỏ hàng</h2>
+      <h2>🛒 Shopping Cart</h2>
 
       {cart.map((it) => (
         <div
@@ -40,14 +40,14 @@ export default function Cart() {
               style={{ width: 60, marginTop: 4 }}
             />
           </div>
-          <button onClick={() => remove(it._id)}> Xoá</button>
+          <button onClick={() => remove(it._id)}>Remove</button>
         </div>
       ))}
 
       <hr style={{ margin: "20px 0" }} />
-      <h3>Tổng cộng: {total.toLocaleString()}đ</h3>
-      <button onClick={clear}>Xoá tất cả</button>
-      <Link to="/checkout" style={{ marginLeft: 12, fontWeight: 700 }}>Thanh toán →</Link>
+      <h3>Total: {total.toLocaleString()}đ</h3>
+      <button onClick={clear}>Clear All</button>
+      <Link to="/checkout" style={{ marginLeft: 12, fontWeight: 700 }}>Checkout →</Link>
     </main>
   );
 }

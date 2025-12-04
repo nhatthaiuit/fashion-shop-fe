@@ -71,12 +71,12 @@ export default function ProductDetail() {
   const { id } = useParams();
   const { add } = useCart();
 
-  const [product, setProduct]   = useState(null);
-  const [qty, setQty]           = useState(1);
+  const [product, setProduct] = useState(null);
+  const [qty, setQty] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [related, setRelated]   = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Load sản phẩm hiện tại
   useEffect(() => {
@@ -98,12 +98,12 @@ export default function ProductDetail() {
         const list = Array.isArray(res.data?.items)
           ? res.data.items
           : Array.isArray(res.data)
-          ? res.data
-          : res.data?.data || [];
+            ? res.data
+            : res.data?.data || [];
         const filtered = list.filter((x) => x._id !== product._id);
         setRelated(filtered.slice(0, 6));
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [product?.category, product?._id]);
 
   // ===== Logic hiển thị theo category/sizes =====
@@ -137,9 +137,9 @@ export default function ProductDetail() {
     return product.countInStock || 99;
   }, [product, canSelectSize, selectedSize]);
 
-  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
-  if (error)   return <div className="error">Lỗi tải sản phẩm: {error}</div>;
-  if (!product) return <div className="error">Không tìm thấy sản phẩm</div>;
+  if (loading) return <div className="loading">Loading product...</div>;
+  if (error) return <div className="error">Error loading product: {error}</div>;
+  if (!product) return <div className="error">Product not found</div>;
 
   return (
     <main className="product_detail_page">
@@ -158,26 +158,26 @@ export default function ProductDetail() {
           </div>
 
           <p className="product_detail_desc">
-            {product.description || "Không có mô tả"}
+            {product.description || "No description available"}
           </p>
 
           {/* Chọn size: chỉ render khi cần & có sizes */}
           {canSelectSize && (
             <div className="product_detail_size">
-              <label>Chọn size:</label>
+              <label>Select Size:</label>
               <SizeSelector sizes={product.sizes} onChange={setSelectedSize} />
             </div>
           )}
           {/* Cảnh báo nếu cần size nhưng chưa cấu hình */}
           {needSize && !hasSizes && (
             <p style={{ color: "#b45309", marginTop: 6 }}>
-              Sản phẩm thuộc nhóm cần size (Top/Bottom) nhưng chưa cấu hình <code>sizes</code>.
+              Product requires size selection but sizes are not configured.
             </p>
           )}
 
           {/* Số lượng */}
           <div className="product_detail_qty">
-            <label>Số lượng:</label>
+            <label>Quantity:</label>
             <input
               type="number"
               min={1}
@@ -193,9 +193,9 @@ export default function ProductDetail() {
             className="btn_add_to_cart"
             disabled={outOfStock || (canSelectSize && !selectedSize)}
             onClick={() => add({ ...product, selectedSize }, qty)}
-            title={outOfStock ? "Hết hàng" : (canSelectSize && !selectedSize ? "Vui lòng chọn size" : "Thêm vào giỏ")}
+            title={outOfStock ? "Out of Stock" : (canSelectSize && !selectedSize ? "Please select a size" : "Add to Cart")}
           >
-            {outOfStock ? "Hết hàng" : "+ Thêm vào giỏ hàng"}
+            {outOfStock ? "Out of Stock" : "+ Add to Cart"}
           </button>
         </div>
       </div>
@@ -203,7 +203,7 @@ export default function ProductDetail() {
       {/* Related */}
       {related.length > 0 && (
         <section className="related_section">
-          <h3 className="related_title">Gợi ý cho bạn</h3>
+          <h3 className="related_title">You might also like</h3>
 
           <div className="related_grid">
             {related.map((p) => (
