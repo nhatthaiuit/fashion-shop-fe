@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
 const tiles = [
-  { to: "/top", label: "TOP", img: "/public/img/Home/review_1.jpg" },
-  { to: "/bottom", label: "BOTTOM", img: "/public/img/Home/review_2.jpg" },
-  { to: "/accessories", label: "ACCESSORIES", img: "/public/img/Home/review_3.jpg" },
+  { to: "/top", label: "TOP", img: "/img/Home/review_1.jpg" },
+  { to: "/bottom", label: "BOTTOM", img: "/img/Home/review_2.jpg" },
+  { to: "/accessories", label: "ACCESSORIES", img: "/img/Home/review_3.jpg" },
 ];
 
 export default function CategoryTiles() {
   return (
     <section className="cat-tiles container">
-      
+
 
       {tiles.map((t) => (
         <Link key={t.label} to={t.to} className="cat-tiles__item">
