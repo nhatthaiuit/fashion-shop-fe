@@ -22,8 +22,7 @@ export default function App() {
 
   // Determine which footer to show
   const showNoFooter = path.startsWith('/admin') || path === '/checkout';
-  const showSimpleFooter = path === '/cart';
-  const showFullFooter = !showNoFooter && !showSimpleFooter;
+  const showFullFooter = !showNoFooter;
 
   return (
     <div className="app_wrapper">
@@ -48,7 +47,6 @@ export default function App() {
 
       {/* Conditional Footer Rendering */}
       {showFullFooter && <Footer />}
-      {showSimpleFooter && <SimpleFooter />}
     </div>
   );
 }

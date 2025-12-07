@@ -13,9 +13,9 @@ export default function ThankYou() {
         padding: "40px 16px"
       }}
     >
-      <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>🎉 Cảm ơn vì đã mua hàng!</h2>
+      <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>🎉 Thank you for your purchase!</h2>
       <p style={{ fontSize: "1.2rem", color: "#333", maxWidth: 600 }}>
-        Đơn hàng của bạn sẽ sớm được giao. Chúng tôi sẽ thông báo ngay khi đơn hàng được gửi đi.
+        Your order will be delivered soon. We will notify you as soon as your order is shipped.
       </p>
 
       <Link
@@ -30,7 +30,7 @@ export default function ThankYou() {
           fontWeight: "600"
         }}
       >
-        ⬅ Tiếp tục mua sắm
+        ⬅ Continue shopping
       </Link>
     </main>
   );
