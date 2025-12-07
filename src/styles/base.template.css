@@ -3,13 +3,33 @@
    ========================= */
 
 /* ---- Reset & Layout ---- */
-* { box-sizing: border-box; }
-html, body, #root { height: 100%; }
-html, body { margin: 0; padding: 0; background: #fff; }
-img, video, canvas { display: block; max-width: 100%; height: auto; }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+
+img,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 
 /* ---- Fonts & Layout Vars ---- */
-:root{
+:root {
   --font-brand: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-ui: "Montserrat", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
@@ -17,51 +37,54 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
   --nav-gap: 32px;
 
   /* NEW: padding hai bên header (mép trái = mép phải) */
-  --side-pad: 72px;         /* tăng/giảm để chỉnh khoảng cách tới mép màn hình */
+  --side-pad: 72px;
+  /* tăng/giảm để chỉnh khoảng cách tới mép màn hình */
 
   /* NEW: độ rộng khối bên trái (logo) & bên phải (icons) để NAV nằm đúng tâm */
-  --side-width: 260px;      /* 240–280px tuỳ logo dài/ngắn */
+  --side-width: 260px;
+  /* 240–280px tuỳ logo dài/ngắn */
 }
 
 /* =========================
    HEADER
    ========================= */
-.header{
-  background:#000;
-  color:#fff;
+.header {
+  background: #000;
+  color: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
-  width:100%;
+  width: 100%;
 }
 
 /* Bọc nội dung header: logo | menu | icons */
-.header__inner{
-  width:100%;
-  max-width:none;
-  margin:0;
+.header__inner {
+  width: 100%;
+  max-width: none;
+  margin: 0;
 
   /* Cao hơn một xíu & mép hai bên bằng nhau */
-  padding: 22px var(--side-pad);   /* ↑ 16px → 22px để header cao hơn */
+  padding: 22px var(--side-pad);
+  /* ↑ 16px → 22px để header cao hơn */
 
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 /* Logo bên trái */
 .header__brand,
-.logo_Northside{
+.logo_Northside {
   font-family: var(--font-brand) !important;
-  color:#fff !important;
-  text-decoration:none !important;
-  font-weight:700;
-  font-size:30px;
-  letter-spacing:0.5px;
-  text-transform:uppercase;
-  white-space:nowrap;
-  line-height:1;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
 
   /* NEW: cố định bề rộng bên trái để cân với icons bên phải */
   flex: 0 0 var(--side-width);
@@ -69,140 +92,179 @@ img, video, canvas { display: block; max-width: 100%; height: auto; }
 }
 
 /* Bọc nav ở giữa: thật sự căn giữa (không dùng offset) */
-.header__navwrap{
+.header__navwrap {
   flex: 1 1 auto;
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
 
   /* Bỏ mọi offset cũ */
   margin-left: 220px;
 }
 
 /* Menu ngang */
-.header__nav{
-  display:flex;
-  align-items:center;
+.header__nav {
+  display: flex;
+  align-items: center;
   gap: var(--nav-gap);
-  list-style:none;
-  margin:0;
-  padding:0;
-  justify-content:center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
 }
 
 /* Tab */
 .header__navlink,
-.title_header{
+.title_header {
   font-family: var(--font-ui);
-  color:#fff;
-  text-decoration:none;
-  font-weight:800;
-  font-size:18px;
-  letter-spacing:.5px;
-  line-height:1;
-  transition:opacity .2s ease;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: .5px;
+  line-height: 1;
+  transition: opacity .2s ease;
 }
+
 .header__navlink:hover,
-.title_header:hover{ opacity:.85; }
+.title_header:hover {
+  opacity: .85;
+}
 
 /* Icons bên phải */
-.header__actions{
-  display:flex;
-  align-items:center;
-  gap:20px;
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 
   /* NEW: bề rộng bằng logo để NAV cân tuyệt đối ở giữa */
   flex: 0 0 var(--side-width);
   min-width: var(--side-width);
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
-.header__icon{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  text-decoration:none;
-  font-size:22px;
-  line-height:1;
+
+.header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 22px;
+  line-height: 1;
   position: relative;
 }
-.header__icon--btn{
-  background:transparent;
-  border:0;
-  cursor:pointer;
-  padding:0;
+
+.header__icon--btn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
 }
 
 /* Link trong header luôn trắng, không gạch chân */
-.header a{ color:#fff !important; text-decoration:none !important; }
+.header a {
+  color: #fff !important;
+  text-decoration: none !important;
+}
 
 /* =========================
    SEARCH DROPDOWN (tùy chọn)
    ========================= */
-.dropdown_header{ position: relative; }
-.dropdown_header .dropdown-content{
+.dropdown_header {
+  position: relative;
+}
+
+.dropdown_header .dropdown-content {
   position: absolute;
-  top: 140%; right: 0;
+  top: 140%;
+  right: 0;
   min-width: 260px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
   padding: 12px 0;
   display: none;
 }
-.dropdown_header:hover .dropdown-content{ display: block; }
-.dropdown_header input{
+
+.dropdown_header:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown_header input {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   outline: none;
 }
-.icon_while{ color:#fff; }
+
+.icon_while {
+  color: #fff;
+}
 
 /* =========================
    RESPONSIVE
    ========================= */
-@media (max-width: 1440px){
-  :root{
+@media (max-width: 1440px) {
+  :root {
     --nav-gap: 32px;
     --side-pad: 64px;
     --side-width: 240px;
   }
 }
 
-@media (max-width: 1280px){
-  :root{
+@media (max-width: 1280px) {
+  :root {
     --nav-gap: 30px;
     --side-pad: 56px;
     --side-width: 220px;
   }
 }
 
-@media (max-width: 1200px){
-  .header__inner{ padding: 20px var(--side-pad); }
-  .header__brand{ font-size:30px; }
-  :root{
+@media (max-width: 1200px) {
+  .header__inner {
+    padding: 20px var(--side-pad);
+  }
+
+  .header__brand {
+    font-size: 30px;
+  }
+
+  :root {
     --nav-gap: 30px;
     --side-pad: 48px;
     --side-width: 200px;
   }
 }
 
-@media (max-width: 900px){
-  .header__inner{ flex-wrap: wrap; row-gap:10px; padding: 16px var(--side-pad); }
-  .header__brand{
-    font-size:26px;
+@media (max-width: 900px) {
+  .header__inner {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding: 16px var(--side-pad);
+  }
+
+  .header__brand {
+    font-size: 26px;
     flex: 0 0 auto;
     min-width: 0;
   }
-  .header__navwrap{
-    order:3; width:100%;
-    justify-content:center;
+
+  .header__navwrap {
+    order: 3;
+    width: 100%;
+    justify-content: center;
   }
-  .header__nav{ justify-content:center; flex-wrap:wrap; gap:20px; }
-  .header__actions{
-    flex: 0 0 auto; min-width: 0;
-    justify-content:flex-end;
+
+  .header__nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .header__actions {
+    flex: 0 0 auto;
+    min-width: 0;
+    justify-content: flex-end;
   }
 }
 
@@ -235,7 +297,7 @@ a:hover{ text-decoration:none; }
 
 /* ========== FULL-BLEED BANNER (no side gaps) ========== */
 /* Dùng khi banner đang nằm trong container có padding (side-pad) */
-.home-banner{
+.home-banner {
   /* cho phần banner tràn ngang toàn màn hình, bất kể cha có padding */
   position: relative;
   left: 50%;
@@ -249,14 +311,27 @@ a:hover{ text-decoration:none; }
   margin-bottom: 0;
 }
 
-.home-banner .banner-image{
+.home-banner .banner-image {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: cover;     /* nếu ảnh crop theo chiều cao */
+  object-fit: cover;
+  /* nếu ảnh crop theo chiều cao */
   /* xoá mọi khoảng trống ảnh/inline */
   margin: 0;
   border: 0;
   padding: 0;
 }
 
+
+/* =========================
+   ADMIN HEADER (centered brand only)
+   ========================= */
+.header__inner--admin {
+  justify-content: center;
+}
+
+.header__inner--admin .header__brand {
+  flex: none;
+  min-width: auto;
+}

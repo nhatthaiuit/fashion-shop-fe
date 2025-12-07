@@ -1,50 +1,115 @@
 import {
-List, Datagrid, TextField, NumberField, EditButton,
-Edit, SimpleForm, TextInput, NumberInput, Create,
-Toolbar, SaveButton, required
+    List, Datagrid, TextField, NumberField, EditButton,
+    Edit, SimpleForm, TextInput, NumberInput, Create,
+    Toolbar, SaveButton, required, SelectInput,
+    ArrayInput, SimpleFormIterator, ImageField, FunctionField,
+    TextInput as FilterTextInput, SelectInput as FilterSelectInput
 } from 'react-admin';
-
+import { StockField } from '../components/StockField';
+import { productExporter } from '../components/CustomExporter';
+import { CustomListActions } from '../components/CustomListActions';
+import '../styles/admin-custom.css';
 
 const ProductToolbar = (props) => (
-<Toolbar {...props}>
-<SaveButton alwaysEnable />
-</Toolbar>
+    <Toolbar {...props}>
+        <SaveButton alwaysEnable />
+    </Toolbar>
 );
 
+const productFilters = [
+    <FilterSelectInput key="category" label="Category" source="category" choices={[
+        { id: 'Top', name: 'Top' },
+        { id: 'Bottom', name: 'Bottom' },
+        { id: 'Accessories', name: 'Accessories' },
+        { id: 'Sale', name: 'Sale' },
+    ]} />
+];
 
 export const ProductList = (props) => (
-<List {...props} perPage={20}>
-<Datagrid rowClick="edit">
-<TextField source="_id" label="ID" />
-<TextField source="name" />
-<NumberField source="price" />
-<NumberField source="countInStock" label="Stock" />
-</Datagrid>
-</List>
+    <List
+        {...props}
+        perPage={25}
+        filters={productFilters}
+        exporter={productExporter}
+        actions={<CustomListActions />}
+    >
+        <Datagrid bulkActionButtons={<></>}>
+            <FunctionField
+                label="ID"
+                render={record => record._id ? record._id.substring(0, 8) + '...' : ''}
+            />
+            <ImageField source="image" label="Image" />
+            <TextField source="name" />
+            <NumberField source="price" />
+            <StockField source="countInStock" label="Stock" />
+            <EditButton />
+        </Datagrid>
+    </List>
 );
+
 
 
 export const ProductEdit = (props) => (
-<Edit {...props}>
-<SimpleForm toolbar={<ProductToolbar />}>
-<TextInput source="name" validate={[required()]} />
-<NumberInput source="price" validate={[required()]} />
-<NumberInput source="countInStock" label="Stock" />
-<TextInput source="image" fullWidth />
-<TextInput source="description" multiline rows={4} fullWidth />
-</SimpleForm>
-</Edit>
+    <Edit {...props}>
+        <SimpleForm toolbar={<ProductToolbar />}>
+            <TextInput source="name" validate={[required()]} />
+            <NumberInput source="price" validate={[required()]} />
+            <SelectInput source="category" choices={[
+                { id: 'Top', name: 'Top' },
+                { id: 'Bottom', name: 'Bottom' },
+                { id: 'Accessories', name: 'Accessories' },
+                { id: 'Sale', name: 'Sale' },
+            ]} validate={[required()]} />
+
+            <ArrayInput source="sizes" label="Sizes" validate={[required()]}>
+                <SimpleFormIterator inline>
+                    <SelectInput source="label" choices={[
+                        { id: 'XS', name: 'XS' },
+                        { id: 'S', name: 'S' },
+                        { id: 'M', name: 'M' },
+                        { id: 'L', name: 'L' },
+                        { id: 'XL', name: 'XL' },
+                        { id: 'XXL', name: 'XXL' },
+                    ]} validate={[required()]} />
+                    <NumberInput source="stock" label="Stock" min={0} defaultValue={0} validate={[required()]} />
+                </SimpleFormIterator>
+            </ArrayInput>
+
+            <TextInput source="image" fullWidth validate={[required()]} />
+            <TextInput source="description" multiline rows={4} fullWidth />
+        </SimpleForm>
+    </Edit>
 );
 
 
 export const ProductCreate = (props) => (
-<Create {...props}>
-<SimpleForm toolbar={<ProductToolbar />}>
-<TextInput source="name" validate={[required()]} />
-<NumberInput source="price" validate={[required()]} />
-<NumberInput source="countInStock" label="Stock" />
-<TextInput source="image" fullWidth />
-<TextInput source="description" multiline rows={4} fullWidth />
-</SimpleForm>
-</Create>
+    <Create {...props}>
+        <SimpleForm toolbar={<ProductToolbar />}>
+            <TextInput source="name" validate={[required()]} />
+            <NumberInput source="price" validate={[required()]} />
+            <SelectInput source="category" choices={[
+                { id: 'Top', name: 'Top' },
+                { id: 'Bottom', name: 'Bottom' },
+                { id: 'Accessories', name: 'Accessories' },
+                { id: 'Sale', name: 'Sale' },
+            ]} validate={[required()]} />
+
+            <ArrayInput source="sizes" label="Sizes" validate={[required()]}>
+                <SimpleFormIterator inline>
+                    <SelectInput source="label" choices={[
+                        { id: 'XS', name: 'XS' },
+                        { id: 'S', name: 'S' },
+                        { id: 'M', name: 'M' },
+                        { id: 'L', name: 'L' },
+                        { id: 'XL', name: 'XL' },
+                        { id: 'XXL', name: 'XXL' },
+                    ]} validate={[required()]} />
+                    <NumberInput source="stock" label="Stock" min={0} defaultValue={0} validate={[required()]} />
+                </SimpleFormIterator>
+            </ArrayInput>
+
+            <TextInput source="image" fullWidth validate={[required()]} />
+            <TextInput source="description" multiline rows={4} fullWidth />
+        </SimpleForm>
+    </Create>
 );

@@ -80,35 +80,35 @@ function normalizeList(payload) {
 export const dataProvider = {
 
   async getList(resource, params) {
-  const qs = buildQuery(params);
-  const url = `/api/${resource}${qs ? `?${qs}` : ''}`;
-  console.log('[DP] getList:', { resource, url, params });
-  const { res, payload } = await req(url);
-  console.log('[DP] payload:', payload);
+    const qs = buildQuery(params);
+    const url = `/api/${resource}${qs ? `?${qs}` : ''}`;
+    console.log('[DP] getList:', { resource, url, params });
+    const { res, payload } = await req(url);
+    console.log('[DP] payload:', payload);
 
-  // ✅ Fix: React Admin yêu cầu return { data, total }
-  let data = [];
-  let total = 0;
+    // ✅ Fix: React Admin yêu cầu return { data, total }
+    let data = [];
+    let total = 0;
 
-  // Nếu payload có items + meta
-  if (payload && Array.isArray(payload.items)) {
-    data = payload.items.map(p => ({ ...p, id: p._id }));
-    total = payload.meta?.total ?? payload.items.length;
-  }
-  // Nếu payload là mảng (fallback)
-  else if (Array.isArray(payload)) {
-    data = payload.map(p => ({ ...p, id: p._id }));
-    total = payload.length;
-  }
-  // Nếu payload có data + total
-  else if (payload && Array.isArray(payload.data)) {
-    data = payload.data.map(p => ({ ...p, id: p._id }));
-    total = payload.total ?? payload.data.length;
-  }
+    // Nếu payload có items + meta
+    if (payload && Array.isArray(payload.items)) {
+      data = payload.items.map(p => ({ ...p, id: p._id }));
+      total = payload.meta?.total ?? payload.items.length;
+    }
+    // Nếu payload là mảng (fallback)
+    else if (Array.isArray(payload)) {
+      data = payload.map(p => ({ ...p, id: p._id }));
+      total = payload.length;
+    }
+    // Nếu payload có data + total
+    else if (payload && Array.isArray(payload.data)) {
+      data = payload.data.map(p => ({ ...p, id: p._id }));
+      total = payload.total ?? payload.data.length;
+    }
 
-  console.log('[DP] return dataProvider:', { data, total }); // kiểm tra trước khi return
-  return { data, total };
-},
+    console.log('[DP] return dataProvider:', { data, total }); // kiểm tra trước khi return
+    return { data, total };
+  },
 
   async getOne(resource, params) {
     const { payload } = await req(`/api/${resource}/${params.id}`);
@@ -134,14 +134,14 @@ export const dataProvider = {
   },
 
   async update(resource, params) {
-    const { payload } = await req(`/api/${resource}/${params.id}`, { method: 'PUT', body: params.data });
+    const { payload } = await req(`/api/${resource}/${params.id}`, { method: 'PATCH', body: params.data });
     const doc = payload.data || payload;
     return { data: withId(doc) };
   },
 
   async updateMany(resource, params) {
     const results = await Promise.all(
-      params.ids.map(id => req(`/api/${resource}/${id}`, { method: 'PUT', body: params.data }))
+      params.ids.map(id => req(`/api/${resource}/${id}`, { method: 'PATCH', body: params.data }))
     );
     return { data: results.map((_, i) => params.ids[i]) };
   },
