@@ -15,10 +15,10 @@ export const loginUser = (data) => api.post("/api/auth/login", data);
 // Orders
 export const createOrder = (data, token) =>
   api.post("/api/orders", data, { headers: { Authorization: `Bearer ${token}` } });
-  
+
 export const updateOrderStatus = (id, status, token) =>
   api.put(
-    "/api/orders/${id}/status",
+    `/api/orders/${id}/status`,
     { status },
     {
       headers: { Authorization: `Bearer ${token}` },

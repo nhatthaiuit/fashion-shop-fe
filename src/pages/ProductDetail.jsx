@@ -178,14 +178,35 @@ export default function ProductDetail() {
           {/* Số lượng */}
           <div className="product_detail_qty">
             <label>Quantity:</label>
-            <input
-              type="number"
-              min={1}
-              max={selectedSizeStock}
-              value={qty}
-              onChange={(e) => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedSizeStock)))}
-              disabled={outOfStock}
-            />
+            <div className="qty-controls">
+              <button
+                type="button"
+                className="qty-btn"
+                onClick={() => setQty(Math.max(1, qty - 1))}
+                disabled={outOfStock || qty <= 1}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min={1}
+                max={selectedSizeStock}
+                value={qty}
+                onChange={(e) => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedSizeStock)))}
+                disabled={outOfStock}
+                aria-label="Quantity"
+              />
+              <button
+                type="button"
+                className="qty-btn"
+                onClick={() => setQty(Math.min(selectedSizeStock, qty + 1))}
+                disabled={outOfStock || qty >= selectedSizeStock}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           {/* Nút thêm vào giỏ */}
