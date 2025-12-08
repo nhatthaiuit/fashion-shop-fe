@@ -29,13 +29,13 @@ export default function Header() {
         {/* Icon phải (ẩn ở trang Admin) */}
         {!isAdminPage && (
           <div className="header__actions">
-            {/* user */}
-            <Link to="/register" aria-label="Account" className="header__icon">
+            {/* user - disabled */}
+            <span aria-label="Account" className="header__icon" style={{ cursor: 'default' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="8" r="4" stroke="white" strokeWidth="2" />
                 <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
               </svg>
-            </Link>
+            </span>
 
             {/* bag/briefcase */}
             <Link to="/cart" aria-label="Cart" className="header__icon">

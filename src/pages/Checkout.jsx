@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
+import "../styles/Checkout.css";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
@@ -10,10 +11,10 @@ export default function Checkout() {
   const nav = useNavigate();
   const { cart, clear } = useCart();
 
-  // 🔑 Cờ đánh dấu đã đặt hàng để không bị effect đẩy về /cart sau khi clear()
+  // Flag to prevent redirect after order placement
   const [orderPlaced, setOrderPlaced] = useState(false);
 
-  // Chặn người vào thẳng /checkout khi giỏ trống (nhưng KHÔNG áp dụng sau khi vừa đặt hàng)
+  // Redirect to cart if empty (but not after order placement)
   useEffect(() => {
     if (!orderPlaced && (!cart || cart.length === 0)) {
       nav("/cart", { replace: true });
@@ -27,18 +28,34 @@ export default function Checkout() {
   const shippingFee = 0;
   const total = subtotal + shippingFee;
 
-  const [form, setForm] = useState({ fullName: "", phone: "", address: "", note: "" });
+  const [form, setForm] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    note: ""
+  });
   const [placing, setPlacing] = useState(false);
   const [err, setErr] = useState("");
+  const [touched, setTouched] = useState({});
 
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErr(""); // Clear error when user types
+  };
+
+  const onBlur = (e) => {
+    setTouched({ ...touched, [e.target.name]: true });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErr("");
 
+    // Mark all fields as touched
+    setTouched({ fullName: true, phone: true, address: true });
+
     if (!form.fullName.trim() || !form.phone.trim() || !form.address.trim()) {
-      setErr("Please fill in Full Name, Phone, and Address.");
+      setErr("Please fill in all required fields (Full Name, Phone, and Address).");
       return;
     }
     if (!cart.length) {
@@ -51,9 +68,9 @@ export default function Checkout() {
 
       const payload = {
         shipping_address: form.address,
-        phone: form.phone,               // 👈 thêm dòng này
+        phone: form.phone,
         customer_name: form.fullName,
-        items: cart.map((it) => ({ product: it._id, qty: it.qty })), // gửi _id thật
+        items: cart.map((it) => ({ product: it._id, qty: it.qty })),
       };
 
       const res = await axios.post(`${API}/api/orders`, payload, {
@@ -61,13 +78,12 @@ export default function Checkout() {
       });
 
       const data = res?.data || {};
-      const oid = data?._id || data?.order?._id || data?.id || "success";
 
-      // 🔑 Đặt cờ trước khi clear để effect không redirect về /cart
+      // Set flag before clearing cart
       setOrderPlaced(true);
       clear();
 
-      // Điều hướng tới trang cảm ơn
+      // Navigate to thank you page
       nav(`/thank-you/`, { replace: true, state: { order: data } });
     } catch (e) {
       console.error("Checkout error:", e);
@@ -77,66 +93,200 @@ export default function Checkout() {
     }
   };
 
+  // Field validation helpers
+  const isFieldInvalid = (fieldName) => {
+    return touched[fieldName] && !form[fieldName].trim();
+  };
+
   return (
-    <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h2>Checkout</h2>
+    <main className="checkout-container">
+      {/* Header */}
+      <div className="checkout-header">
+        <h1>Checkout</h1>
+        <p>Complete your order by filling in your shipping information</p>
+      </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
-        <form onSubmit={handleSubmit}>
-          <h3>Shipping Information</h3>
-          <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-            <input name="fullName" placeholder="Full Name" value={form.fullName} onChange={onChange} />
-            <input name="phone" placeholder="Phone Number" value={form.phone} onChange={onChange} />
-            <input name="address" placeholder="Address" value={form.address} onChange={onChange} />
-            <textarea name="note" placeholder="Note (optional)" rows={3} value={form.note} onChange={onChange} />
-          </div>
-          {err && <div style={{ color: "crimson", marginTop: 8 }}>{err}</div>}
+      {/* Progress Steps */}
+      <div className="checkout-progress">
+        <div className="progress-step completed">
+          <div className="progress-step-number">✓</div>
+          <span className="progress-step-label">Cart</span>
+        </div>
+        <div className="progress-divider"></div>
+        <div className="progress-step active">
+          <div className="progress-step-number">2</div>
+          <span className="progress-step-label">Shipping</span>
+        </div>
+        <div className="progress-divider"></div>
+        <div className="progress-step">
+          <div className="progress-step-number">3</div>
+          <span className="progress-step-label">Confirmation</span>
+        </div>
+      </div>
 
-          <button
-            type="submit"
-            disabled={placing}
-            style={{
-              marginTop: 14,
-              padding: "10px 14px",
-              border: 0,
-              borderRadius: 8,
-              background: "#000",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {placing ? "Placing order..." : "Place Order"}
-          </button>
-        </form>
+      {/* Checkout Content Grid */}
+      <div className="checkout-content">
+        {/* Checkout Form */}
+        <div className="checkout-form">
+          <h2>
+            <span>📦</span>
+            Shipping Information
+          </h2>
 
-        <aside style={{ border: "1px solid #eee", borderRadius: 10, padding: 16, height: "fit-content" }}>
-          <h3>Order Summary</h3>
-          <div style={{ display: "grid", gap: 8, marginTop: 8 }}>
-            {cart.map((it) => (
-              <div key={it._id} style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <img src={it.image} alt={it.name} width={56} height={56} style={{ objectFit: "cover", borderRadius: 6 }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600 }}>{it.name}</div>
-                  <div>
-                    {Number(it.price).toLocaleString()}đ × {it.qty}
+          <form onSubmit={handleSubmit}>
+            <div className="form-section">
+              {/* Full Name */}
+              <div className="form-group">
+                <label htmlFor="fullName" className="form-label">
+                  Full Name
+                  <span className="required">*</span>
+                </label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={form.fullName}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  className={`form-input ${isFieldInvalid('fullName') ? 'error' : ''}`}
+                />
+              </div>
+
+              {/* Phone Number */}
+              <div className="form-group">
+                <label htmlFor="phone" className="form-label">
+                  Phone Number
+                  <span className="required">*</span>
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  value={form.phone}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  className={`form-input ${isFieldInvalid('phone') ? 'error' : ''}`}
+                />
+              </div>
+
+              {/* Address */}
+              <div className="form-group">
+                <label htmlFor="address" className="form-label">
+                  Shipping Address
+                  <span className="required">*</span>
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  type="text"
+                  placeholder="Enter your shipping address"
+                  value={form.address}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  className={`form-input ${isFieldInvalid('address') ? 'error' : ''}`}
+                />
+              </div>
+
+              {/* Note */}
+              <div className="form-group">
+                <label htmlFor="note" className="form-label">
+                  Order Notes (Optional)
+                </label>
+                <textarea
+                  id="note"
+                  name="note"
+                  placeholder="Any special instructions for your order?"
+                  value={form.note}
+                  onChange={onChange}
+                  className="form-textarea"
+                />
+                <p className="form-helper">
+                  Add any special delivery instructions or notes
+                </p>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {err && (
+              <div className="error-message">
+                <span className="error-message-icon">⚠️</span>
+                <span className="error-message-text">{err}</span>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={placing}
+              className="submit-button"
+            >
+              {placing ? (
+                <>
+                  <div className="submit-button-spinner"></div>
+                  Processing Order...
+                </>
+              ) : (
+                <>
+                  <span>🛍️</span>
+                  Place Order
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* Order Summary */}
+        <aside className="order-summary">
+          <h2>Order Summary</h2>
+
+          {/* Order Items */}
+          <div className="order-items">
+            {cart.map((item) => (
+              <div key={item._id} className="order-item">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="order-item-image"
+                />
+                <div className="order-item-details">
+                  <div className="order-item-name">{item.name}</div>
+                  <div className="order-item-price">
+                    {Number(item.price).toLocaleString()}đ
+                  </div>
+                  <div className="order-item-quantity">
+                    Quantity: {item.qty}
                   </div>
                 </div>
               </div>
             ))}
-            <hr />
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Subtotal</span>
-              <span>{subtotal.toLocaleString()}đ</span>
+          </div>
+
+          {/* Order Totals */}
+          <div className="order-totals">
+            <div className="order-total-row">
+              <span className="label">Subtotal ({cart.length} {cart.length === 1 ? 'item' : 'items'})</span>
+              <span className="amount">{subtotal.toLocaleString()}đ</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Shipping Fee</span>
-              <span>{shippingFee.toLocaleString()}đ</span>
+
+            <div className="order-total-row">
+              <span className="label">Shipping Fee</span>
+              <span className="amount">Free</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: 18 }}>
-              <span>Total</span>
-              <span>{total.toLocaleString()}đ</span>
+
+            <div className="order-total-row total">
+              <span className="label">Total</span>
+              <span className="amount">{total.toLocaleString()}đ</span>
             </div>
+          </div>
+
+          {/* Security Badge */}
+          <div className="security-badge">
+            <span className="security-badge-icon">🔒</span>
+            <p className="security-badge-text">
+              Your payment information is secure. We use industry-standard encryption to protect your data.
+            </p>
           </div>
         </aside>
       </div>
