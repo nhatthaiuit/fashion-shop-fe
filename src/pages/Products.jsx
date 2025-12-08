@@ -15,7 +15,7 @@ export default function Products() {
   const { add } = useCart();
 
   // giữ phân trang/sort như cũ
-  const params = useMemo(() => ({ page: 1, limit: 12, sort: "newest" }), []);
+  const params = useMemo(() => ({ page: 1, limit: 999, sort: "newest" }), []);
 
   useEffect(() => {
     let stop = false;
