@@ -134,7 +134,9 @@ export const dataProvider = {
   },
 
   async update(resource, params) {
-    const { payload } = await req(`/api/${resource}/${params.id}`, { method: 'PATCH', body: params.data });
+    // Orders resource needs PUT method, others use PATCH
+    const method = resource === 'orders' ? 'PUT' : 'PATCH';
+    const { payload } = await req(`/api/${resource}/${params.id}`, { method, body: params.data });
     const doc = payload.data || payload;
     return { data: withId(doc) };
   },
