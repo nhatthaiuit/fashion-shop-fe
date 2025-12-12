@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './size-selector.css';
+import "../../styles/SizeSelector.css";
 
 export default function SizeSelector({ sizes = [], onChange }) {
   const [selected, setSelected] = useState(null);

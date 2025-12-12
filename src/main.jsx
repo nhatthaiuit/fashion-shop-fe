@@ -5,19 +5,15 @@ import App from "./App.jsx";
 import { CartProvider } from "./context/CartContext.jsx";  // ⬅️ PHẢI import
 
 /* CSS */
-import "/src/styles/base.template.css";
-import "/src/styles/home.template.css";
-import "/src/styles/detail.template.css";
-import "/src/styles/accesPay.css";
-import "/src/styles/cart.template.css";
+import "/src/styles/Base.css";
+import "/src/styles/Home.css";
+import "/src/styles/ProductDetail.css";
 import "/src/styles/CSTV.css";
-import "/src/styles/PayCart.css";
 import "/src/styles/Register.css";
 import "/src/styles/Sale.css";
 import "/src/styles/Top.css";
-import "/src/styles/slider.fix.css";
-import "/src/styles/home.patch.css";
-import "./styles/footer.css";
+import "/src/styles/HomePatch.css";
+import "./styles/Footer.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

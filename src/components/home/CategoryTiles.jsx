@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
 const tiles = [
-  { to: "/top", label: "TOP", img: "/img/Home/review_1.jpg" },
-  { to: "/bottom", label: "BOTTOM", img: "/img/Home/review_2.jpg" },
-  { to: "/accessories", label: "ACCESSORIES", img: "/img/Home/review_3.jpg" },
+  { to: "/top", label: "TOP", img: "/img/home/review_1.jpg" },
+  { to: "/bottom", label: "BOTTOM", img: "/img/home/review_2.jpg" },
+  { to: "/accessories", label: "ACCESSORIES", img: "/img/home/review_3.jpg" },
 ];
 
 export default function CategoryTiles() {

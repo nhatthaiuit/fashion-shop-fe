@@ -1,6 +1,7 @@
-.content{
+.content {
     padding-top: 94.5px;
 }
+
 .review_home {
     display: flex;
     flex-wrap: wrap;
@@ -39,16 +40,16 @@
 }
 
 .item_review1 {
-    background-image: url('./img/Home/review_1.jpg');
+    background-image: url('./img/home/review_1.jpg');
 
 }
 
 .item_review2 {
-    background-image: url('./img/Home/review_2.jpg');
+    background-image: url('./img/home/review_2.jpg');
 }
 
 .item_review3 {
-    background-image: url('./img/Home/review_3.jpg');
+    background-image: url('./img/home/review_3.jpg');
 }
 
 .text_itemReview {
@@ -106,29 +107,55 @@
     width: 250px;
     height: 250px;
 }
+
 .slick-carousel img {
 
     transition: transform 0.8s ease;
-  
+
 }
 
 .slick-carousel img:hover {
     transform: scale(1.1);
 
 }
-.slick-carousel{
+
+.slick-carousel {
     width: 100%;
     margin: 0 auto;
-   
+
 }
-.title_home_poster{
+
+.title_home_poster {
     text-align: center;
     margin-bottom: 20px;
 }
-.address_contact>a{
+
+.address_contact>a {
     text-decoration: none;
     color: #bbbbbb;
 }
-.address_contact>a:hover{
+
+.address_contact>a:hover {
     text-decoration: underline;
+}
+
+.hero_slider {
+    width: 100%;
+}
+
+.hero_slide {
+    position: relative;
+}
+
+.hero_slide .image_slider {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.slick-slider,
+.slick-list,
+.slick-track {
+    width: 100%;
 }

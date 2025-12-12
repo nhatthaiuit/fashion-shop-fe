@@ -1,9 +1,0 @@
-.hero_slider { width: 100%; }
-.hero_slide { position: relative; }
-.hero_slide .image_slider {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
-.slick-slider, .slick-list, .slick-track { width: 100%; }

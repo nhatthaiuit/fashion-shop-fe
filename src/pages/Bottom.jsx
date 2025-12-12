@@ -1,6 +1,6 @@
-import CategoryPage from "./_CategoryPage.jsx";
+import Category from "./Category.jsx";
 
 export default function Bottom() {
-  return <CategoryPage title="BOTTOM" category="Bottom" />;
+  return <Category title="BOTTOM" category="Bottom" />;
 }
 

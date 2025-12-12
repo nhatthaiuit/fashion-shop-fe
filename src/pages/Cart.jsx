@@ -54,13 +54,13 @@ export default function Cart() {
                 {/* Product Image */}
                 <img
                   src={item.image}
-                  alt={item.name}
+                  alt={item.product_name}
                   className="cart-item-image"
                 />
 
                 {/* Product Details */}
                 <div className="cart-item-details">
-                  <h3 className="cart-item-name">{item.name}</h3>
+                  <h3 className="cart-item-name">{item.product_name}</h3>
                   <p className="cart-item-price">{item.price.toLocaleString()}đ</p>
                   <p className="cart-item-subtotal">
                     Subtotal: {subtotal.toLocaleString()}đ

@@ -24,7 +24,7 @@ export const orderExporter = (orders) => {
             total: order.total_amount || 0,
             status: order.status || '',
             items: itemsStr,
-            created_at: order.createdAt ? new Date(order.createdAt).toLocaleString('vi-VN') : '',
+            created_at: order.created_at ? new Date(order.created_at).toLocaleString('vi-VN') : '',
         };
     });
 

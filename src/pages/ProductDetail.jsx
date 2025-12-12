@@ -3,67 +3,10 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
-import "../styles/detail.template.css";
+import "../styles/ProductDetail.css";
 
-// ========== SizeSelector (không tự bơm S/M/L 0 stock) ==========
-function SizeSelector({ sizes = [], onChange }) {
-  const [selected, setSelected] = useState(null);
-
-  if (!Array.isArray(sizes) || sizes.length === 0) {
-    return null; // không render nếu không có size
-  }
-
-  return (
-    <div className="size-selector">
-      {sizes.map(({ label, stock }) => {
-        const disabled = (stock || 0) <= 0;
-        const active = selected === label;
-        return (
-          <button
-            key={label}
-            type="button"
-            className={`size-btn ${active ? "active" : ""} ${disabled ? "disabled" : ""}`}
-            disabled={disabled}
-            onClick={() => {
-              setSelected(label);
-              onChange?.(label);
-            }}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// ========== ImageGallery ==========
-function ImageGallery({ main, images = [] }) {
-  const all = images?.length ? [main, ...images] : [main].filter(Boolean);
-  const [current, setCurrent] = useState(all[0]);
-  if (!all.length) return null;
-
-  return (
-    <div className="image-gallery">
-      <div className="main-image">
-        <img src={current} alt="" />
-      </div>
-      {all.length > 1 && (
-        <div className="thumbs">
-          {all.map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt=""
-              className={`thumb ${src === current ? "active" : ""}`}
-              onClick={() => setCurrent(src)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+import ImageGallery from "../components/products/ImageGallery";
+import SizeSelector from "../components/products/SizeSelector";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
@@ -123,19 +66,25 @@ export default function ProductDetail() {
     if (canSelectSize) {
       return product.sizes.some((s) => (s.stock || 0) > 0);
     }
-    return (product.countInStock || 0) > 0;
+    return (product.count_in_stock || 0) > 0;
   }, [product, canSelectSize]);
 
   const outOfStock = !stockAvailable;
 
-  // max theo size đã chọn hoặc countInStock
+  const getStock = () => {
+    // max theo size đã chọn hoặc count_in_stock
+    if (product.sizes?.length && selectedSize) {
+      const s = product.sizes.find(x => x.label === selectedSize);
+      return s ? s.stock : 0;
+    }
+    // ko size (phụ kiện...)
+    return product.count_in_stock || 99;
+  };
+
   const selectedSizeStock = useMemo(() => {
     if (!product) return 0;
-    if (canSelectSize && selectedSize) {
-      return product.sizes.find((s) => s.label === selectedSize)?.stock || 0;
-    }
-    return product.countInStock || 99;
-  }, [product, canSelectSize, selectedSize]);
+    return getStock();
+  }, [product, selectedSize, getStock]);
 
   if (loading) return <div className="loading">Loading product...</div>;
   if (error) return <div className="error">Error loading product: {error}</div>;
@@ -150,12 +99,11 @@ export default function ProductDetail() {
         </div>
 
         {/* Thông tin sản phẩm */}
-        <div className="product_detail_info">
-          <h2 className="product_detail_name">{product.name}</h2>
-
-          <div className="product_detail_price">
+        <div className="pt-20">
+          <h2 className="text-3xl font-bold mb-4">{product.product_name}</h2>
+          <p className="text-xl mb-4 text-red-600 font-semibold">
             {Number(product.price || 0).toLocaleString()}đ
-          </div>
+          </p>
 
           <p className="product_detail_desc">
             {product.description || "No description available"}

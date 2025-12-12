@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
-import "../styles/products.template.css";
+import "../styles/Products.css";
 import { Link } from "react-router-dom";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
@@ -49,8 +49,8 @@ export default function Products() {
 
   // ✅ Đẩy sản phẩm hết hàng xuống cuối (client-side)
   const sortedItems = [...items].sort((a, b) => {
-    const A = (a.countInStock ?? 0) <= 0 ? 1 : 0;
-    const B = (b.countInStock ?? 0) <= 0 ? 1 : 0;
+    const A = (a.count_in_stock ?? 0) <= 0 ? 1 : 0;
+    const B = (b.count_in_stock ?? 0) <= 0 ? 1 : 0;
     if (A !== B) return A - B; // hết hàng (1) xuống dưới
     return 0;
   });
@@ -61,7 +61,7 @@ export default function Products() {
 
       <div className="products_grid">
         {sortedItems.map((p) => {
-          const out = (p.countInStock ?? 0) <= 0;
+          const out = (p.count_in_stock ?? 0) <= 0;
           return (
             <div
               key={p._id || p.name}

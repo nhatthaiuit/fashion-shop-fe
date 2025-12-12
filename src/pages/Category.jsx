@@ -1,13 +1,13 @@
-// src/pages/_CategoryPage.jsx
+// src/pages/Category.jsx
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
 import { Link } from "react-router-dom";
-import "../styles/products.template.css";
+import "../styles/Products.css";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
-export default function CategoryPage({ title, category }) {
+export default function Category({ title, category }) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
@@ -42,7 +42,7 @@ export default function CategoryPage({ title, category }) {
                   <img src={p.image || "/img/products/default.jpg"} alt={p.name} />
                 </div>
                 <div className="product_info">
-                  <div className="product_name">{p.name}</div>
+                  <div className="product_name">{p.product_name}</div>
                   <div className="product_price">{Number(p.price || 0).toLocaleString()}đ</div>
                 </div>
               </Link>

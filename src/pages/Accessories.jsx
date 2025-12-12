@@ -1,5 +1,5 @@
-import CategoryPage from "./_CategoryPage.jsx";
+import Category from "./Category.jsx";
 
 export default function Accessories() {
-  return <CategoryPage title="ACCESSORIES" category="Accessories" />;
+  return <Category title="ACCESSORIES" category="Accessories" />;
 }

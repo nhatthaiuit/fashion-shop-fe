@@ -70,7 +70,7 @@ export default function Checkout() {
         shipping_address: form.address,
         phone: form.phone,
         customer_name: form.fullName,
-        items: cart.map((it) => ({ product: it._id, qty: it.qty })),
+        items: cart.map((it) => ({ product_id: it._id, quantity: it.qty })),
       };
 
       const res = await axios.post(`${API}/api/orders`, payload, {

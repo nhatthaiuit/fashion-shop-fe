@@ -13,12 +13,12 @@ export default function ProductCard({ p }) {
                 <div className="prd__thumb">
                     <img
                         src={img}
-                        alt={p.name}
+                        alt={p.product_name}
                         onError={(e) => (e.currentTarget.src = "/img/products/fallback.jpg")}
                     />
                 </div>
                 <div className="prd__meta">
-                    <h3 className="prd__name">{p.name}</h3>
+                    <h3 className="prd__name">{p.product_name}</h3>
                     <div className="prd__price">
                         {typeof p.price === "number" ? p.price.toLocaleString("vi-VN") : p.price || "—"} VND
                     </div>

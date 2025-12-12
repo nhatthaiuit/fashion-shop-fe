@@ -1,9 +1,9 @@
 import { Admin, Resource } from "react-admin";
 import { dataProvider } from "./dataProvider";
 import { authProvider } from "./authProvider";
-import { ProductList, ProductEdit, ProductCreate } from "./resources/products";
-import { OrderList, OrderShow, OrderEdit } from "./resources/orders";
-import "./styles/admin-custom.css";
+import { ProductList, ProductEdit, ProductCreate } from "./resources/Products";
+import { OrderList, OrderShow, OrderEdit } from "./resources/Orders";
+import "./styles/AdminStyles.css";
 
 // Simple SVG icons as components
 const ProductIcon = () => (

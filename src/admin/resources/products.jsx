@@ -8,7 +8,7 @@ import {
 import { StockField } from '../components/StockField';
 import { productExporter } from '../components/CustomExporter';
 import { CustomListActions } from '../components/CustomListActions';
-import '../styles/admin-custom.css';
+import '../styles/AdminStyles.css';
 
 const ProductToolbar = (props) => (
     <Toolbar {...props}>
@@ -39,9 +39,9 @@ export const ProductList = (props) => (
                 render={record => record._id ? record._id.substring(0, 8) + '...' : ''}
             />
             <ImageField source="image" label="Image" />
-            <TextField source="name" />
+            <TextField source="product_name" label="Product Name" />
             <NumberField source="price" />
-            <StockField source="countInStock" label="Stock" />
+            <StockField source="count_in_stock" label="Stock" />
             <EditButton />
         </Datagrid>
     </List>
@@ -52,7 +52,7 @@ export const ProductList = (props) => (
 export const ProductEdit = (props) => (
     <Edit {...props}>
         <SimpleForm toolbar={<ProductToolbar />}>
-            <TextInput source="name" validate={[required()]} />
+            <TextInput source="product_name" label="Product Name" validate={[required()]} />
             <NumberInput source="price" validate={[required()]} />
             <SelectInput source="category" choices={[
                 { id: 'Top', name: 'Top' },
@@ -85,7 +85,7 @@ export const ProductEdit = (props) => (
 export const ProductCreate = (props) => (
     <Create {...props}>
         <SimpleForm toolbar={<ProductToolbar />}>
-            <TextInput source="name" validate={[required()]} />
+            <TextInput source="product_name" label="Product Name" validate={[required()]} />
             <NumberInput source="price" validate={[required()]} />
             <SelectInput source="category" choices={[
                 { id: 'Top', name: 'Top' },

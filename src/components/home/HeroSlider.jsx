@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const slides = [
-  "/img/Home/baner_web.jpg",
+  "/img/home/baner_web.jpg",
 ].filter(Boolean);
 
 export default function HeroSlider() {

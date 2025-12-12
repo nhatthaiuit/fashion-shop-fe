@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './image-gallery.css';
+import "../../styles/ImageGallery.css";
 
 export default function ImageGallery({ main, images = [] }) {
   const all = images?.length ? [main, ...images] : [main].filter(Boolean);

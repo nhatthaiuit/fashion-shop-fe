@@ -16,7 +16,7 @@ import {
 } from "react-admin";
 import { CustomOrderListActions } from '../components/CustomOrderListActions';
 import { orderExporter } from '../components/CustomOrderExporter';
-import '../styles/admin-custom.css';
+import '../styles/AdminStyles.css';
 
 const statusChoices = [
   { id: "pending", name: "pending" },
@@ -31,7 +31,7 @@ export const OrderList = (props) => (
   <List
     {...props}
     perPage={20}
-    sort={{ field: "createdAt", order: "DESC" }}
+    sort={{ field: "created_at", order: "DESC" }}
     actions={<CustomOrderListActions />}
     exporter={orderExporter}
   >
@@ -45,11 +45,12 @@ export const OrderList = (props) => (
       <TextField source="phone" label="Phone" />
       <TextField source="shipping_address" label="Address" />
       <TextField source="status" />
-      <DateField source="createdAt" showTime label="Created at" />
+      <DateField source="created_at" showTime label="Created at" />
     </Datagrid>
   </List>
 );
 
+// SHOW: /admin/orders/:id/show
 // SHOW: /admin/orders/:id/show
 export const OrderShow = (props) => (
   <Show {...props} component="div">
@@ -119,11 +120,11 @@ export const OrderShow = (props) => (
           </div>
           <div className="info-row">
             <span className="info-label">Order Date</span>
-            <DateField source="createdAt" showTime className="info-value" />
+            <DateField source="created_at" showTime className="info-value" />
           </div>
           <div className="info-row">
             <span className="info-label">Last Updated</span>
-            <DateField source="updatedAt" showTime className="info-value" />
+            <DateField source="updated_at" showTime className="info-value" />
           </div>
         </div>
       </div>
@@ -139,8 +140,8 @@ export const OrderShow = (props) => (
                 if (!record.product_id) {
                   return <span className="product-deleted">Product Deleted</span>;
                 }
-                if (record.product_id?.name) {
-                  return record.product_id.name;
+                if (record.product_id?.product_name) {
+                  return record.product_id.product_name;
                 }
                 if (typeof record.product_id === 'string' && record.product_id) {
                   return `ID: ${record.product_id.substring(0, 8)}...`;

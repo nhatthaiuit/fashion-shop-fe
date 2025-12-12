@@ -15,7 +15,7 @@ export const productExporter = (products) => {
             name: product.name,
             price: product.price,
             category: product.category,
-            stock: product.countInStock,
+            stock: product.count_in_stock,
             sizes: sizesStr,
             description: product.description || '',
         };
