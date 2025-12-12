@@ -1,6 +1,6 @@
 // src/components/layout/SimpleFooter.jsx
 import { Link } from "react-router-dom";
-import "../../styles/footer.css";
+import "../../styles/Footer.css";
 
 export default function SimpleFooter() {
     const year = new Date().getFullYear();
