@@ -5,7 +5,7 @@ import { useCart } from "../context/CartContext.jsx";
 import { Link } from "react-router-dom";
 import "../styles/Products.css";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
 export default function Category({ title, category }) {
   const [list, setList] = useState([]);

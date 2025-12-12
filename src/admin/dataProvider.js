@@ -1,5 +1,5 @@
 // src/admin/dataProvider.js
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:4000').replace(/\/$/, '');
 
 /** Map _id -> id cho React Admin */
 function withId(doc) {
@@ -135,7 +135,8 @@ export const dataProvider = {
 
   async update(resource, params) {
     // Orders resource needs PUT method, others use PATCH
-    const method = resource === 'orders' ? 'PUT' : 'PATCH';
+    // Orders & Products need PUT method
+    const method = 'PUT';
     const { payload } = await req(`/api/${resource}/${params.id}`, { method, body: params.data });
     const doc = payload.data || payload;
     return { data: withId(doc) };

@@ -3,290 +3,216 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
+import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import "../styles/Checkout.css";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
 export default function Checkout() {
   const nav = useNavigate();
   const { cart, clear } = useCart();
 
-  // Flag to prevent redirect after order placement
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("cod"); // cod | paypal | vnpay
+  const [paypalClientId, setPaypalClientId] = useState("");
 
-  // Redirect to cart if empty (but not after order placement)
+  // Redirect if empty
   useEffect(() => {
     if (!orderPlaced && (!cart || cart.length === 0)) {
       nav("/cart", { replace: true });
     }
   }, [cart?.length, orderPlaced, nav]);
 
+  // Fetch PayPal Config
+  useEffect(() => {
+    axios.get(`${API}/api/payment/config/paypal`)
+      .then(res => setPaypalClientId(res.data.clientId))
+      .catch(err => console.error("PP Config Error", err));
+  }, []);
+
   const subtotal = useMemo(
     () => cart.reduce((s, it) => s + Number(it.price || 0) * Number(it.qty || 1), 0),
     [cart]
   );
-  const shippingFee = 0;
-  const total = subtotal + shippingFee;
+  const total = subtotal; // Free shipping
 
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    address: "",
-    note: ""
-  });
+  const [form, setForm] = useState({ fullName: "", phone: "", address: "", note: "" });
   const [placing, setPlacing] = useState(false);
   const [err, setErr] = useState("");
   const [touched, setTouched] = useState({});
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setErr(""); // Clear error when user types
+    setErr("");
+  };
+  const onBlur = (e) => setTouched({ ...touched, [e.target.name]: true });
+
+  const validate = () => {
+    setTouched({ fullName: true, phone: true, address: true });
+    if (!form.fullName.trim() || !form.phone.trim() || !form.address.trim()) {
+      setErr("Please fill in all required fields.");
+      return false;
+    }
+    return true;
   };
 
-  const onBlur = (e) => {
-    setTouched({ ...touched, [e.target.name]: true });
-  };
+  const createOrderPayload = () => ({
+    shipping_address: form.address,
+    phone: form.phone,
+    customer_name: form.fullName,
+    items: cart.map((it) => ({ product_id: it._id, quantity: it.qty })),
+    payment_method: paymentMethod,
+    total_amount: total
+  });
 
+  // Handle Standard Submit (COD or VNPay)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErr("");
-
-    // Mark all fields as touched
-    setTouched({ fullName: true, phone: true, address: true });
-
-    if (!form.fullName.trim() || !form.phone.trim() || !form.address.trim()) {
-      setErr("Please fill in all required fields (Full Name, Phone, and Address).");
-      return;
-    }
-    if (!cart.length) {
-      setErr("Cart is empty.");
-      return;
-    }
+    if (!validate()) return;
 
     try {
       setPlacing(true);
+      const payload = createOrderPayload();
 
-      const payload = {
-        shipping_address: form.address,
-        phone: form.phone,
-        customer_name: form.fullName,
-        items: cart.map((it) => ({ product_id: it._id, quantity: it.qty })),
-      };
+      // 1. Create Order
+      const res = await axios.post(`${API}/api/orders`, payload);
+      const order = res.data;
 
-      const res = await axios.post(`${API}/api/orders`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const data = res?.data || {};
-
-      // Set flag before clearing cart
+      // 2. Handle Payment Redirect
+      // COD
       setOrderPlaced(true);
       clear();
+      nav(`/thank-you/`, { replace: true, state: { order } });
 
-      // Navigate to thank you page
-      nav(`/thank-you/`, { replace: true, state: { order: data } });
     } catch (e) {
-      console.error("Checkout error:", e);
-      setErr(e?.response?.data?.message || e.message || "Server connection error");
+      console.error(e);
+      setErr(e?.response?.data?.message || e.message);
     } finally {
       setPlacing(false);
     }
   };
 
-  // Field validation helpers
-  const isFieldInvalid = (fieldName) => {
-    return touched[fieldName] && !form[fieldName].trim();
+  // PayPal Handlers
+  const handlePaypalCreate = async (data, actions) => {
+    if (!validate()) return Promise.reject("Form invalid");
+
+    // Create Order in DB first? Or just Paypal Order?
+    // Best practice: Create PayPal order here.
+    return actions.order.create({
+      purchase_units: [{ amount: { value: (total / 25000).toFixed(2) } }] // Convert VND to USD roughly
+    });
   };
+
+  const handlePaypalApprove = async (data, actions) => {
+    // Capture
+    const details = await actions.order.capture();
+
+    // Create/Update Order in Backend
+    try {
+      const payload = createOrderPayload();
+      payload.payment_result = {
+        id: details.id,
+        status: details.status,
+        update_time: details.update_time,
+        email_address: details.payer.email_address
+      };
+      payload.is_paid = true;
+      payload.paid_at = new Date(); // now
+
+      const res = await axios.post(`${API}/api/orders`, payload);
+      setOrderPlaced(true);
+      clear();
+      nav(`/thank-you/`, { replace: true, state: { order: res.data } });
+    } catch (e) {
+      setErr("Payment success but failed to create order: " + e.message);
+    }
+  };
+
+  const isFieldInvalid = (n) => touched[n] && !form[n].trim();
 
   return (
     <main className="checkout-container">
-      {/* Header */}
       <div className="checkout-header">
         <h1>Checkout</h1>
-        <p>Complete your order by filling in your shipping information</p>
+        <p>Complete your order</p>
       </div>
 
-      {/* Progress Steps */}
-      <div className="checkout-progress">
-        <div className="progress-step completed">
-          <div className="progress-step-number">✓</div>
-          <span className="progress-step-label">Cart</span>
-        </div>
-        <div className="progress-divider"></div>
-        <div className="progress-step active">
-          <div className="progress-step-number">2</div>
-          <span className="progress-step-label">Shipping</span>
-        </div>
-        <div className="progress-divider"></div>
-        <div className="progress-step">
-          <div className="progress-step-number">3</div>
-          <span className="progress-step-label">Confirmation</span>
-        </div>
-      </div>
-
-      {/* Checkout Content Grid */}
       <div className="checkout-content">
-        {/* Checkout Form */}
         <div className="checkout-form">
-          <h2>
-            <span>📦</span>
-            Shipping Information
-          </h2>
-
+          <h2>Shipping Information</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-section">
-              {/* Full Name */}
               <div className="form-group">
-                <label htmlFor="fullName" className="form-label">
-                  Full Name
-                  <span className="required">*</span>
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={form.fullName}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  className={`form-input ${isFieldInvalid('fullName') ? 'error' : ''}`}
-                />
+                <label className="form-label">Full Name *</label>
+                <input name="fullName" value={form.fullName} onChange={onChange} onBlur={onBlur} className={`form-input ${isFieldInvalid('fullName') ? 'error' : ''}`} placeholder="Full Name" />
               </div>
-
-              {/* Phone Number */}
               <div className="form-group">
-                <label htmlFor="phone" className="form-label">
-                  Phone Number
-                  <span className="required">*</span>
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  value={form.phone}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  className={`form-input ${isFieldInvalid('phone') ? 'error' : ''}`}
-                />
+                <label className="form-label">Phone *</label>
+                <input name="phone" value={form.phone} onChange={onChange} onBlur={onBlur} className={`form-input ${isFieldInvalid('phone') ? 'error' : ''}`} placeholder="Phone" />
               </div>
-
-              {/* Address */}
               <div className="form-group">
-                <label htmlFor="address" className="form-label">
-                  Shipping Address
-                  <span className="required">*</span>
-                </label>
-                <input
-                  id="address"
-                  name="address"
-                  type="text"
-                  placeholder="Enter your shipping address"
-                  value={form.address}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  className={`form-input ${isFieldInvalid('address') ? 'error' : ''}`}
-                />
+                <label className="form-label">Address *</label>
+                <input name="address" value={form.address} onChange={onChange} onBlur={onBlur} className={`form-input ${isFieldInvalid('address') ? 'error' : ''}`} placeholder="Address" />
               </div>
-
-              {/* Note */}
               <div className="form-group">
-                <label htmlFor="note" className="form-label">
-                  Order Notes (Optional)
-                </label>
-                <textarea
-                  id="note"
-                  name="note"
-                  placeholder="Any special instructions for your order?"
-                  value={form.note}
-                  onChange={onChange}
-                  className="form-textarea"
-                />
-                <p className="form-helper">
-                  Add any special delivery instructions or notes
-                </p>
+                <label className="form-label">Note</label>
+                <textarea name="note" value={form.note} onChange={onChange} className="form-textarea" placeholder="Note" />
               </div>
             </div>
 
-            {/* Error Message */}
-            {err && (
-              <div className="error-message">
-                <span className="error-message-icon">⚠️</span>
-                <span className="error-message-text">{err}</span>
+            <div className="form-section">
+              <h3>Payment Method</h3>
+              <div className="payment-methods">
+                <label className={`payment-option ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+                  <input type="radio" name="pay" value="cod" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} />
+                  <span>💵 Cash on Delivery (COD)</span>
+                </label>
+                <label className={`payment-option ${paymentMethod === 'paypal' ? 'selected' : ''}`}>
+                  <input type="radio" name="pay" value="paypal" checked={paymentMethod === 'paypal'} onChange={() => setPaymentMethod('paypal')} />
+                  <span>💳 PayPal (Visa/Master)</span>
+                </label>
               </div>
-            )}
+            </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={placing}
-              className="submit-button"
-            >
-              {placing ? (
-                <>
-                  <div className="submit-button-spinner"></div>
-                  Processing Order...
-                </>
-              ) : (
-                <>
-                  <span>🛍️</span>
-                  Place Order
-                </>
-              )}
-            </button>
+            {err && <div className="error-message">⚠️ {err}</div>}
+
+            {paymentMethod === 'paypal' ? (
+              <div style={{ marginTop: 20 }}>
+                {paypalClientId && (
+                  <PayPalScriptProvider options={{ "client-id": paypalClientId }}>
+                    <PayPalButtons
+                      createOrder={handlePaypalCreate}
+                      onApprove={handlePaypalApprove}
+                    />
+                  </PayPalScriptProvider>
+                )}
+              </div>
+            ) : (
+              <button type="submit" disabled={placing} className="submit-button">
+                {placing ? "Processing..." : `Place Order (${paymentMethod.toUpperCase()})`}
+              </button>
+            )}
           </form>
         </div>
 
-        {/* Order Summary */}
         <aside className="order-summary">
           <h2>Order Summary</h2>
-
-          {/* Order Items */}
           <div className="order-items">
-            {cart.map((item) => (
-              <div key={item._id} className="order-item">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="order-item-image"
-                />
-                <div className="order-item-details">
-                  <div className="order-item-name">{item.name}</div>
-                  <div className="order-item-price">
-                    {Number(item.price).toLocaleString()}đ
-                  </div>
-                  <div className="order-item-quantity">
-                    Quantity: {item.qty}
-                  </div>
+            {cart.map(it => (
+              <div key={it._id} className="order-item">
+                <img src={it.image} alt={it.name} className="order-item-image" />
+                <div>
+                  <div>{it.name}</div>
+                  <div>{Number(it.price).toLocaleString()}đ x {it.qty}</div>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Order Totals */}
           <div className="order-totals">
-            <div className="order-total-row">
-              <span className="label">Subtotal ({cart.length} {cart.length === 1 ? 'item' : 'items'})</span>
-              <span className="amount">{subtotal.toLocaleString()}đ</span>
+            <div className="total">
+              <span>Total</span>
+              <span>{total.toLocaleString()}đ</span>
             </div>
-
-            <div className="order-total-row">
-              <span className="label">Shipping Fee</span>
-              <span className="amount">Free</span>
-            </div>
-
-            <div className="order-total-row total">
-              <span className="label">Total</span>
-              <span className="amount">{total.toLocaleString()}đ</span>
-            </div>
-          </div>
-
-          {/* Security Badge */}
-          <div className="security-badge">
-            <span className="security-badge-icon">🔒</span>
-            <p className="security-badge-text">
-              Your payment information is secure. We use industry-standard encryption to protect your data.
-            </p>
           </div>
         </aside>
       </div>

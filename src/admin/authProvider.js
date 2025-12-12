@@ -1,5 +1,5 @@
 // src/admin/authProvider.js
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:4000').replace(/\/$/, '');
 
 export const authProvider = {
   async login({ username, password }) {

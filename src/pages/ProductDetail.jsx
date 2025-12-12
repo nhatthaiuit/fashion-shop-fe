@@ -8,7 +8,7 @@ import "../styles/ProductDetail.css";
 import ImageGallery from "../components/products/ImageGallery";
 import SizeSelector from "../components/products/SizeSelector";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -51,7 +51,7 @@ export default function ProductDetail() {
 
   // ===== Logic hiển thị theo category/sizes =====
   const needSize = useMemo(
-    () => ["Top", "Bottom"].includes(product?.category),
+    () => ["Top", "Bottom", "Accessories"].includes(product?.category),
     [product?.category]
   );
   const hasSizes = useMemo(

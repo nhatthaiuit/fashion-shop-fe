@@ -235,29 +235,54 @@
 }
 
 .error-message-text {
-    color: var(--checkout-danger);
     font-size: 0.875rem;
     font-weight: 600;
+}
+
+/* Payment Methods */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-option.selected {
+    border-color: #000;
+    background-color: #f9f9f9;
+}
+
+.payment-option input {
+    margin-right: 12px;
 }
 
 /* Submit Button */
 .submit-button {
     width: 100%;
-    padding: 1rem 2rem;
-    background: var(--checkout-primary);
+    padding: 16px;
+    background-color: #000000;
     color: white;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.125rem;
-    font-weight: 700;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--checkout-shadow);
-    margin-top: 1.5rem;
+    margin-top: 24px;
+    transition: transform 0.2s, background-color 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 .submit-button:hover:not(:disabled) {
