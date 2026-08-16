@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
 import { Link } from "react-router-dom";
-import "../styles/Products.css";
+import "../styles/Home.css";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
@@ -28,27 +28,27 @@ export default function Category({ title, category }) {
   if (err) return <div className="error">Error: {err}</div>;
 
   return (
-    <main className="products_page">
-      <h2 className="products_title">{title}</h2>
+    <main>
+      <h1 className="title_home_product">{title}</h1>
 
-      <div className="products_grid">
+      <div className="products_home" style={{ justifyContent: 'flex-start', gap: '2%', rowGap: '30px' }}>
         {list.length === 0 ? (
-          <p>No products found in this category.</p>
+          <p style={{textAlign: 'center', width: '100%'}}>No products found in this category.</p>
         ) : (
           list.map((p) => (
-            <div key={p._id} className="product_card">
-              <Link to={`/products/${p._id}`} className="product_link">
-                <div className="product_image_wrapper">
-                  <img src={p.image || "/img/products/default.jpg"} alt={p.name} />
-                </div>
-                <div className="product_info">
-                  <div className="product_name">{p.product_name}</div>
-                  <div className="product_price">{Number(p.price || 0).toLocaleString()}đ</div>
-                </div>
-              </Link>
-              <button className="btn_add" onClick={() => add(p, 1)}>
-                + Add to Cart
-              </button>
+            <div key={p._id} className="item_products_home" style={{width: '23%', minWidth: '300px', margin: '0 1%'}}>
+              <div className="image_home_item">
+                  <Link to={`/products/${p._id}`}>
+                      <img src={p.image || "/img/products/default.jpg"} alt={p.name} className="image_products_home" />
+                  </Link>
+              </div>
+              <h4 className="infProducts_home">{p.product_name || p.name}</h4>
+              <p className="infProducts_home">{Number(p.price || 0).toLocaleString()} VND</p>
+              <div style={{textAlign: 'center', marginTop: '15px'}}>
+                  <button onClick={() => add(p, 1)} style={{cursor: 'pointer', background: 'transparent', border: 'none', fontWeight: 'bold', fontSize: '14px', color: '#000'}}>
+                    + ADD TO CART
+                  </button>
+              </div>
             </div>
           ))
         )}

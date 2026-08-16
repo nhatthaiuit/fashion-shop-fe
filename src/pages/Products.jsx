@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
-import "../styles/Products.css";
+import "../styles/Home.css";
 import { Link } from "react-router-dom";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
@@ -14,7 +14,6 @@ export default function Products() {
   const [err, setErr] = useState(null);
   const { add } = useCart();
 
-  // giữ phân trang/sort như cũ
   const params = useMemo(() => ({ page: 1, limit: 999, sort: "newest" }), []);
 
   useEffect(() => {
@@ -42,61 +41,54 @@ export default function Products() {
     return () => {
       stop = true;
     };
-  }, [params]); // API là hằng, không cần đưa vào deps
+  }, [params]);
 
   if (loading) return <div className="loading">Loading products...</div>;
   if (err) return <div className="error">Error: {String(err)}</div>;
 
-  // ✅ Đẩy sản phẩm hết hàng xuống cuối (client-side)
   const sortedItems = [...items].sort((a, b) => {
     const A = (a.count_in_stock ?? 0) <= 0 ? 1 : 0;
     const B = (b.count_in_stock ?? 0) <= 0 ? 1 : 0;
-    if (A !== B) return A - B; // hết hàng (1) xuống dưới
+    if (A !== B) return A - B; 
     return 0;
   });
 
   return (
-    <main className="products_page">
-      <h2 className="products_title">ALL PRODUCTS</h2>
+    <main>
+      <h1 className="title_home_product">ALL PRODUCTS</h1>
 
-      <div className="products_grid">
+      <div className="products_home" style={{ justifyContent: 'flex-start', gap: '2%', rowGap: '30px' }}>
         {sortedItems.map((p) => {
           const out = (p.count_in_stock ?? 0) <= 0;
           return (
             <div
               key={p._id || p.name}
-              className={`product_card ${out ? "out-of-stock" : ""}`}
+              className={`item_products_home ${out ? "out-of-stock" : ""}`}
+              style={{width: '23%', minWidth: '300px', margin: '0 1%', opacity: out ? 0.5 : 1}}
               title={out ? "Out of Stock" : ""}
             >
-              <Link to={`/products/${p._id}`} className="product_link">
-                <div className="product_image_wrapper">
-                  {/* Badge Out of Stock */}
-                  {out && <span className="badge_oos">Out of Stock</span>}
-                  <img
-                    src={p.image || "/img/products/default.jpg"}
-                    alt={p.name}
-                    onError={(e) =>
-                      (e.currentTarget.src = "/img/products/default.jpg")
-                    }
-                  />
-                </div>
-
-                <div className="product_info">
-                  <div className="product_name">{p.name}</div>
-                  <div className="product_price">
-                    {Number(p.price || 0).toLocaleString()}đ
-                  </div>
-                </div>
-              </Link>
-
-              {/* Nút thêm giỏ: disable khi hết hàng */}
-              <button
-                className="btn_add"
-                disabled={out}
-                onClick={() => add(p, 1)}
-              >
-                {out ? "Out of Stock" : "+ Add to Cart"}
-              </button>
+              <div className="image_home_item">
+                  <Link to={`/products/${p._id}`}>
+                      {out && <span style={{position: 'absolute', background: 'black', color: 'white', padding: '5px 10px'}}>Out of Stock</span>}
+                      <img 
+                          src={p.image || "/img/products/default.jpg"} 
+                          alt={p.name} 
+                          className="image_products_home" 
+                          onError={(e) => (e.currentTarget.src = "/img/products/default.jpg")} 
+                      />
+                  </Link>
+              </div>
+              <h4 className="infProducts_home">{p.name || p.product_name}</h4>
+              <p className="infProducts_home">{Number(p.price || 0).toLocaleString()} VND</p>
+              <div style={{textAlign: 'center', marginTop: '15px'}}>
+                  <button 
+                      onClick={() => add(p, 1)} 
+                      disabled={out}
+                      style={{cursor: out ? 'not-allowed' : 'pointer', background: 'transparent', border: 'none', fontWeight: 'bold', fontSize: '14px', color: '#000'}}
+                  >
+                    {out ? "OUT OF STOCK" : "+ ADD TO CART"}
+                  </button>
+              </div>
             </div>
           );
         })}
