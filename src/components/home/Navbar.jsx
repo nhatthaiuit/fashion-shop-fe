@@ -19,7 +19,7 @@ export default function Navbar() {
           letterSpacing: "1px"
         }}
       >
-        UIT Fashion Shop
+        UIT Store
       </Link>
 
       {/* Tabs điều hướng */}

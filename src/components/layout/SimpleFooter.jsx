@@ -8,7 +8,7 @@ export default function SimpleFooter() {
     return (
         <footer className="footer footer--simple">
             <div className="footer__bottom">
-                <span>© {year} UIT Fashion Shop. All rights reserved.</span>
+                <span>© {year} UIT Store. All rights reserved.</span>
                 <div className="footer__bottom-links">
                     <Link to="/policies/privacy">Privacy</Link>
                     <Link to="/policies/terms">Terms</Link>
