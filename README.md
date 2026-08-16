@@ -14,7 +14,8 @@ For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and 
 - **Backend API Docs**: **[https://fashion-shop-backend.onrender.com/docs](https://fashion-shop-backend.onrender.com/docs)**
 
 ### 🔐 Test Accounts (For Recruiters/Testers)
-- **Admin Panel Access**: `admin@fashionshop.com` / `123456`
+- **Admin**: `admin@fashionshop.com` / `123456`
+- **Customer**: Feel free to register a new account via the `/api/auth/register` API.
 
 ## 🚀 Features
 
@@ -22,6 +23,11 @@ For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and 
 - **Order Filtering & Search**: Advanced table filtering allowing staff to filter orders by exact status (Pending, Shipped) and perform fuzzy searches.
 - **Data Export Capability**: Built-in CSV export functionality for both Products and Orders.
 - **Responsive E-Commerce UI**: Seamless customer experience for browsing products and checkout flow.
+
+
+## 📸 Screenshots
+
+*(Screenshots will be updated here soon)*
 
 ## 🛠 Tech Stack
 
