@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import { CartProvider } from "./context/CartContext.jsx";  // ⬅️ PHẢI import
 
 /* CSS */
+import "./index.css";
 import "/src/styles/Base.css";
 import "/src/styles/Home.css";
 import "/src/styles/ProductDetail.css";

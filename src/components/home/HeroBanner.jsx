@@ -9,13 +9,7 @@ export default function HeroBanner() {
         className="hero__img"
         onError={(e) => (e.currentTarget.style.display = "none")}
       />
-      <div className="hero__overlay">
-        <h1 className="hero__title">NEW COLLECTION</h1>
-        <p className="hero__subtitle">Minimal • Everyday • Streetwear</p>
-        <Link to="/products" className="hero__cta">
-          SHOP NOW
-        </Link>
-      </div>
+      {/* Overlay removed because banner image already contains text */}
     </section>
   );
 }
