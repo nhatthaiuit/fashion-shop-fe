@@ -5,7 +5,7 @@ export default function Footer() {
     <footer>
         <div className="logo_footer">
             <img src="/img/icon_logo.png" alt="Logo" className="logo_footerIcon" />
-            <p className="title_footer">NORTHSIDE CREW</p>
+            <p className="title_footer">UIT Shop</p>
         </div>
         <ul className="contact_footer">
             <li>

@@ -12,7 +12,7 @@ export default function Header() {
     return (
       <header>
         <div className="logo_header" style={{ width: '100%', textAlign: 'center' }}>
-          <Link to="/" className="logo_Northside">ACCESS WORKSHOP ADMIN</Link>
+          <Link to="/" className="logo_Northside">UIT Shop ADMIN</Link>
         </div>
       </header>
     );
@@ -21,7 +21,7 @@ export default function Header() {
   return (
     <header>
         <div className="logo_header">
-            <Link to="/" className="logo_Northside">NORTHSIDE CREW</Link>
+            <Link to="/" className="logo_Northside">UIT Shop</Link>
         </div>
         <ul className="navigate_header">
             <li><Link to="/" className="title_header">HOME</Link></li>
