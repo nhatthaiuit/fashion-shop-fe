@@ -6,6 +6,9 @@ import { CartProvider } from "./context/CartContext.jsx";  // ⬅️ PHẢI impo
 
 /* CSS */
 import "./index.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import "/src/styles/Base.css";
 import "/src/styles/Home.css";
 import "/src/styles/ProductDetail.css";

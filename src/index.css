@@ -1,143 +1,19 @@
-/* ========================================
-   GLOBAL RESET & BASE STYLES
-   Fashion Shop - ACCESS WORKSHOP
-   ======================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
-
-:root {
-  /* Color Palette */
-  --color-black: #000;
-  --color-white: #fff;
-  --color-bg: #fff;
-  --color-text: #111;
-  --color-text-muted: #666;
-  --color-border: #e5e5e5;
-  --color-surface: #f8f8f8;
-  --color-accent: #111;
-  --color-accent-hover: #333;
-  --color-danger: #dc2626;
-
-  /* Typography */
-  --font-brand: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-
-  /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
-  --space-3xl: 64px;
-
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-pill: 999px;
-
-  /* Transitions */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: 0.2s var(--ease-out);
-  --transition-normal: 0.35s var(--ease-out);
-
-  /* Layout */
-  --max-width: 1280px;
-  --side-pad: 24px;
-
-  color-scheme: light;
-  font-family: var(--font-body);
-  font-weight: 400;
-  line-height: 1.6;
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+li {
+    list-style-type: none;
 }
-
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
-
 body {
-  margin: 0;
-  min-height: 100vh;
-  min-width: 320px;
+    background-color: #fff;
+    color: #000;
 }
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-img, video, canvas {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
 a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-a:hover {
-  color: var(--color-accent-hover);
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  outline: none;
-}
-
-input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-/* Utility */
-.container {
-  max-width: var(--max-width);
-  margin-inline: auto;
-  padding-inline: var(--side-pad);
-}
-
-/* App wrapper */
-.app_wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app_wrapper > main,
-.app_wrapper > .home,
-.app_wrapper > .products_page,
-.app_wrapper > .product_detail_page {
-  flex: 1;
-}
-
-/* Responsive side padding */
-@media (min-width: 768px) {
-  :root { --side-pad: 40px; }
-}
-@media (min-width: 1200px) {
-  :root { --side-pad: 64px; }
+    text-decoration: none;
 }

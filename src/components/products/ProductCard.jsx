@@ -1,30 +1,22 @@
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ p }) {
-    const id = p._id || p.id;
-    const img =
-        !p.image || p.image.startsWith("/images/")
-            ? "/img/products/fallback.jpg"
-            : p.image;
-
-    return (
-        <div className="prd">
-            <Link to={`/products/${id}`} className="prd__link">
-                <div className="prd__thumb">
-                    <img
-                        src={img}
-                        alt={p.product_name}
-                        onError={(e) => (e.currentTarget.src = "/img/products/fallback.jpg")}
-                    />
-                </div>
-                <div className="prd__meta">
-                    <h3 className="prd__name">{p.product_name}</h3>
-                    <div className="prd__price">
-                        {typeof p.price === "number" ? p.price.toLocaleString("vi-VN") : p.price || "—"} VND
-                    </div>
-                </div>
+  const isOutOfStock = p.count_in_stock <= 0;
+  
+  return (
+    <div className="item_products_home">
+        <div className="image_home_item">
+            <Link to={`/products/${p._id || p.id}`}>
+                <img 
+                    src={p.image || "/img/products/default.jpg"} 
+                    alt={p.name} 
+                    className="image_products_home"
+                    onError={(e) => (e.currentTarget.src = "/img/products/default.jpg")} 
+                />
             </Link>
-            <button className="btn btn--primary prd__btn">Add to Cart</button>
         </div>
-    );
+        <h4 className="infProducts_home">{p.name || p.product_name}</h4>
+        <p className="infProducts_home">{Number(p.price || 0).toLocaleString()} VND</p>
+    </div>
+  );
 }
