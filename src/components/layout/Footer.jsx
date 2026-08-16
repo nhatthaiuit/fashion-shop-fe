@@ -14,9 +14,9 @@ export default function Footer() {
                 </div>
                 <div className="content_contact">
                     <ul>
-                        <li className="address_contact"><i className="fa-solid fa-location-dot"></i> 110 Trần Phú, Hà Đông, Hà Nội</li>
-                        <li className="address_contact"><i className="fa-solid fa-phone"></i> Hotlline: 0968862222</li>
-                        <li className="address_contact"><i className="fa-solid fa-envelope"></i> Email: khoaivutien2k3@gmail.com</li>
+                        <li className="address_contact"><i className="fa-solid fa-location-dot"></i> Khu phố 6, P.Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh</li>
+                        <li className="address_contact"><i className="fa-solid fa-phone"></i> Hotline: 0388874855</li>
+                        <li className="address_contact"><i className="fa-solid fa-envelope"></i> Email: nhatthaidx@gmail.com</li>
                     </ul>
                 </div>
             </li>
