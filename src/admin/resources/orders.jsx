@@ -10,6 +10,7 @@ import {
   Edit,
   SimpleForm,
   SelectInput,
+  TextInput,
   FunctionField,
   Toolbar,
   SaveButton,
@@ -26,6 +27,11 @@ const statusChoices = [
   { id: "cancelled", name: "cancelled" },
 ];
 
+const orderFilters = [
+  <TextInput key="search" source="customer_name" label="Customer Name" alwaysOn />,
+  <SelectInput key="status" source="status" label="Status" choices={statusChoices} />
+];
+
 // LIST: /admin/orders
 export const OrderList = (props) => (
   <List
@@ -34,6 +40,7 @@ export const OrderList = (props) => (
     sort={{ field: "created_at", order: "DESC" }}
     actions={<CustomOrderListActions />}
     exporter={orderExporter}
+    filters={orderFilters}
   >
     <Datagrid rowClick="show" bulkActionButtons={false}>
       <FunctionField
