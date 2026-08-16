@@ -19,7 +19,7 @@ export default function Navbar() {
           letterSpacing: "1px"
         }}
       >
-        ACCESS WORKSHOP
+        UIT Fashion Shop
       </Link>
 
       {/* Tabs điều hướng */}
