@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
 }
 li {
     list-style-type: none;
@@ -13,6 +12,10 @@ html {
 body {
     background-color: #fff;
     color: #000;
+    font-family: 'Inter', sans-serif;
+}
+h1, h2, h3, h4, h5, h6, .logo_Northside, .title_header, .title_home_product, .title_home_poster {
+    font-family: 'Montserrat', sans-serif;
 }
 a {
     text-decoration: none;

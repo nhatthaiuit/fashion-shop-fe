@@ -132,3 +132,22 @@
 .address_contact>a:hover{
     text-decoration: underline;
 }
+.btn_add_cart {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    font-family: 'Inter', sans-serif;
+}
+.btn_add_cart:hover {
+    background-color: #EE5022;
+}
+.btn_add_cart:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

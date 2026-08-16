@@ -57,14 +57,14 @@ export default function Products() {
     <main>
       <h1 className="title_home_product">ALL PRODUCTS</h1>
 
-      <div className="products_home" style={{ justifyContent: 'flex-start', gap: '2%', rowGap: '30px' }}>
+      <div className="products_home">
         {sortedItems.map((p) => {
           const out = (p.count_in_stock ?? 0) <= 0;
           return (
             <div
               key={p._id || p.name}
               className={`item_products_home ${out ? "out-of-stock" : ""}`}
-              style={{width: '23%', minWidth: '300px', margin: '0 1%', opacity: out ? 0.5 : 1}}
+              style={{opacity: out ? 0.5 : 1}}
               title={out ? "Out of Stock" : ""}
             >
               <div className="image_home_item">
@@ -81,13 +81,7 @@ export default function Products() {
               <h4 className="infProducts_home">{p.name || p.product_name}</h4>
               <p className="infProducts_home">{Number(p.price || 0).toLocaleString()} VND</p>
               <div style={{textAlign: 'center', marginTop: '15px'}}>
-                  <button 
-                      onClick={() => add(p, 1)} 
-                      disabled={out}
-                      style={{cursor: out ? 'not-allowed' : 'pointer', background: 'transparent', border: 'none', fontWeight: 'bold', fontSize: '14px', color: '#000'}}
-                  >
-                    {out ? "OUT OF STOCK" : "+ ADD TO CART"}
-                  </button>
+                  <button className="btn_add_cart" disabled={out} onClick={() => add(p, 1)}>{out ? "OUT OF STOCK" : "+ ADD TO CART"}</button>
               </div>
             </div>
           );
