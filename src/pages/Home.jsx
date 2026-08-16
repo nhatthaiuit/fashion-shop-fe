@@ -32,9 +32,9 @@ export default function Home() {
   };
 
   const posters = [
-    "/img/poster/ảnh 1.jpg",
-    "/img/poster/ảnh 2.jpg",
-    "/img/poster/ảnh 3.jpg",
+    "/img/poster/poster_1.jpg",
+    "/img/poster/poster_2.jpg",
+    "/img/poster/poster_3.jpg",
     "/img/poster/ảnh4.jpg",
     "/img/poster/ảnh 5.jpg",
     "/img/poster/ảnh 6.jpg",
