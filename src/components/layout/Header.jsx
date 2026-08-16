@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <>
       <div className="header">
-        <div className={\`header__inner \${isAdminPage ? 'header__inner--admin' : ''}\`}>
+        <div className={`header__inner ${isAdminPage ? 'header__inner--admin' : ''}`}>
           {/* Logo */}
           <Link to="/" className="header__brand">ACCESS WORKSHOP</Link>
 
@@ -76,7 +76,7 @@ export default function Header() {
 
       {/* Mobile Nav Overlay */}
       {!isAdminPage && (
-        <div className={\`header__mobile-nav \${mobileOpen ? 'open' : ''}\`}>
+        <div className={`header__mobile-nav ${mobileOpen ? 'open' : ''}`}>
           <button className="header__mobile-close" onClick={closeMobile} aria-label="Close menu">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path d="M6 6l12 12M6 18L18 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
@@ -88,7 +88,7 @@ export default function Header() {
             </NavLink>
           ))}
           <Link to="/cart" onClick={closeMobile}>
-            CART {totalQty > 0 && \`(\${totalQty})\`}
+            CART {totalQty > 0 && `(${totalQty})`}
           </Link>
         </div>
       )}
