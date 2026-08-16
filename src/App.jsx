@@ -27,6 +27,7 @@ export default function App() {
   return (
     <div className="app_wrapper">
       <Header />
+      <main className="main-content">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -44,6 +45,7 @@ export default function App() {
 
         <Route path="*" element={<div className="p-6">Not Found</div>} />
       </Routes>
+      </main>
 
       {/* Conditional Footer Rendering */}
       {showFullFooter && <Footer />}
