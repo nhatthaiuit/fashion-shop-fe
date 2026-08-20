@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
 
 export default function Register() {
   const [formData, setFormData] = useState({

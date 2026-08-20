@@ -21,6 +21,8 @@ dist-ssr/
 # --- Environment
 .env
 .env.*
+!.env.production
+!.env.example
 !.env.example
 
 # --- Python & Scratch scripts

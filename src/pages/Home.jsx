@@ -5,7 +5,7 @@ import HeroBanner from "../components/home/HeroBanner";
 import CategoryTiles from "../components/home/CategoryTiles";
 import ProductCard from "../components/products/ProductCard";
 
-const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
 
 export default function Home() {
   const [list, setList] = useState([]);
