@@ -88,9 +88,9 @@ const MyAppBar = (props) => {
 export const AdminLayout = (props) => {
     const { children } = props;
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', backgroundColor: '#f9fafb' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', backgroundColor: '#f9fafb', boxSizing: 'border-box' }}>
             <MyAppBar />
-            <main style={{ flex: 1, padding: '30px 40px', width: '100%', maxWidth: '1400px', margin: '0 auto', boxSizing: 'border-box' }}>
+            <main style={{ flex: 1, padding: '30px 40px', width: '100%', boxSizing: 'border-box', margin: 0 }}>
                 {children}
             </main>
         </div>

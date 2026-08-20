@@ -1,4 +1,7 @@
 
+/* ===========================
+   FULL-WIDTH RESPONSIVE ADMIN LAYOUT
+   =========================== */
 .admin-app-wrapper,
 .admin-app-wrapper > div,
 .RaLayout-root,
@@ -7,23 +10,60 @@
 .RaLayout-content,
 .RaList-root,
 .RaList-main,
+.MuiPaper-root,
+.MuiTableContainer-root,
+.RaDatagrid-root,
+.RaTopToolbar-root,
+.RaList-actions,
 .MuiContainer-root {
-    max-width: none !important;
+    max-width: 100% !important;
     width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     box-sizing: border-box !important;
 }
 
+.RaLayout-content {
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.RaList-root {
+    width: 100% !important;
+}
+
+.RaList-main {
+    width: 100% !important;
+}
+
+.RaList-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
+}
+
+.RaTopToolbar-root {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+}
+
 .RaDatagrid-root {
     width: 100% !important;
+    background: #fff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid var(--admin-border) !important;
+    overflow-x: auto !important;
 }
 
 .RaDatagrid-table {
     width: 100% !important;
+    min-width: 100% !important;
     table-layout: auto !important;
+    border-collapse: collapse !important;
 }
-
 
 /* ===========================
    LAYOUT OVERRIDES (TOP MENU)
@@ -33,53 +73,6 @@
 .RaAppBar-menuButton {
     display: none !important;
 }
-
-
-
-.RaLayout-root,
-.RaLayout-appFrame,
-.RaLayout-contentWithSidebar,
-.RaLayout-content,
-.MuiContainer-root {
-    max-width: none !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-.RaLayout-content {
-    padding: 20px !important; /* Match the header padding */
-}
-
-
-/* Sometimes react-admin sets margin-left dynamically on the main element */
-main {
-    margin-left: 0 !important;
-}
-
-
-
-/* ===========================
-   SIDEBAR STYLING
-   =========================== */
-.RaMenuItemLink-active {
-    background: #000 !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    margin: 4px 12px !important;
-}
-
-.RaMenuItemLink-active .MuiListItemIcon-root {
-    color: #fff !important;
-}
-
-/* Make normal items have margin so active state radius looks good */
-.RaMenuItemLink-root {
-    margin: 4px 12px !important;
-    border-radius: 8px !important;
-}
-
-/* Admin Custom Styles - Enhanced UI */
 
 /* ===========================
    COLOR SCHEME
@@ -102,13 +95,6 @@ body {
 /* ===========================
    TABLE/DATAGRID STYLING
    =========================== */
-.RaDatagrid-root {
-    background: #fff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
-    border: 1px solid var(--admin-border) !important;
-}
-
 .RaDatagrid-thead {
     background: #fff !important;
 }
@@ -116,7 +102,7 @@ body {
 .RaDatagrid-headerCell:not(.MuiTableCell-paddingCheckbox) {
     text-align: center !important;
     font-weight: 600 !important;
-    font-size: 12px !important;
+    font-size: 13px !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     color: #6b7280 !important;
@@ -186,12 +172,15 @@ button[aria-label="Export"],
     background: #000 !important;
     color: #fff !important;
     font-weight: 600 !important;
-    padding: 8px 16px !important;
+    padding: 8px 18px !important;
     border-radius: 6px !important;
     text-transform: none !important;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.2s ease !important;
     border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
 }
 
 .RaCreateButton-root:hover,
@@ -203,10 +192,6 @@ button[aria-label="Export"]:hover,
     background: #374151 !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
     transform: translateY(-1px) !important;
-}
-
-.RaList-actions {
-    margin-bottom: 16px !important;
 }
 
 /* Make sure DELETE button stays red if it's the actual delete */
