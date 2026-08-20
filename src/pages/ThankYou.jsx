@@ -54,14 +54,14 @@ export default function ThankYou() {
         )}
 
         <div style={{ margin: "16px 0 24px 0", display: "inline-block", padding: "8px 16px", borderRadius: "20px", background: isBankTransfer ? "#e0f2fe" : "#fef3c7", color: isBankTransfer ? "#0369a1" : "#92400e", fontWeight: "bold", fontSize: "14px" }}>
-          {isBankTransfer ? "⚡ ĐÃ THANH TOÁN (PROCESSING) - ĐANG CHUẨN BỊ HÀNG" : "💵 COD (PENDING) - CHỜ GỌI XÁC NHẬN"}
+          {isBankTransfer ? "⚡ PAID (PROCESSING) - ORDER IN PREPARATION" : "💵 COD (PENDING) - AWAITING PHONE CONFIRMATION"}
         </div>
         
         <p style={{ fontSize: "1.05rem", color: "#666", lineHeight: "1.6", marginBottom: "2rem" }}>
           {isBankTransfer ? (
-            "Cảm ơn bạn! Đơn hàng đã được thanh toán thành công qua chuyển khoản ngân hàng. Đơn hàng đã được duyệt và chuyển sang bộ phận kho để đóng gói ngay."
+            "Thank you! Your payment via bank transfer has been confirmed. Your order has been approved and is being prepared by our warehouse team for immediate shipping."
           ) : (
-            "Cảm ơn bạn đã đặt hàng! Đơn hàng của bạn đã được ghi nhận. Nhân viên chăm sóc khách hàng của shop sẽ sớm liên hệ qua số điện thoại để xác nhận đơn hàng trước khi gửi đi."
+            "Thank you for your order! Your order has been placed successfully. Our customer support team will contact you via phone shortly to confirm your order details before delivery."
           )}
         </p>
 

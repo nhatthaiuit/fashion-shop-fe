@@ -235,7 +235,7 @@ export default function Checkout() {
                   />
                   <div className="payment-option-text">
                     <span className="payment-option-title">💵 Cash on Delivery (COD)</span>
-                    <span className="payment-option-desc">Thanh toán bằng tiền mặt khi nhận hàng (Cần gọi xác nhận)</span>
+                    <span className="payment-option-desc">Pay with cash upon delivery (Phone confirmation required)</span>
                   </div>
                 </label>
 
@@ -248,8 +248,8 @@ export default function Checkout() {
                     onChange={() => setPaymentMethod("bank_transfer")}
                   />
                   <div className="payment-option-text">
-                    <span className="payment-option-title">⚡ Chuyển khoản VietQR (Ngân hàng)</span>
-                    <span className="payment-option-desc">Quét mã QR chuyển khoản nhanh 24/7 (Được duyệt đóng gói ngay)</span>
+                    <span className="payment-option-title">⚡ VietQR Bank Transfer</span>
+                    <span className="payment-option-desc">Instant 24/7 QR bank transfer (Immediate order packaging)</span>
                   </div>
                 </label>
               </div>
@@ -259,7 +259,7 @@ export default function Checkout() {
                 <div className="vietqr-payment-box animate-fade-in" style={{ marginTop: "16px", padding: "20px", background: "#f8fafc", border: "2px dashed #0284c7", borderRadius: "12px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
                     <i className="fa-solid fa-qrcode" style={{ fontSize: "20px", color: "#0284c7" }}></i>
-                    <span style={{ fontWeight: "bold", fontSize: "15px", color: "#0f172a" }}>Quét mã VietQR để thanh toán</span>
+                    <span style={{ fontWeight: "bold", fontSize: "15px", color: "#0f172a" }}>Scan VietQR Code to Pay</span>
                   </div>
                   
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", background: "#ffffff", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
@@ -271,29 +271,29 @@ export default function Checkout() {
                     
                     <div style={{ width: "100%", fontSize: "13px", color: "#334155", background: "#f1f5f9", padding: "12px", borderRadius: "6px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                        <span>Ngân hàng:</span>
+                        <span>Bank Name:</span>
                         <strong>Vietcombank (VCB)</strong>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                        <span>Số tài khoản:</span>
+                        <span>Account Number:</span>
                         <strong style={{ color: "#0284c7" }}>0123456789</strong>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                        <span>Chủ tài khoản:</span>
+                        <span>Account Holder:</span>
                         <strong>UIT FASHION STORE</strong>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                        <span>Số tiền:</span>
-                        <strong style={{ color: "#EE5022", fontSize: "14px" }}>{total.toLocaleString()}đ</strong>
+                        <span>Amount:</span>
+                        <strong style={{ color: "#EE5022", fontSize: "14px" }}>{total.toLocaleString()} VND</strong>
                       </div>
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span>Nội dung CK:</span>
+                        <span>Transfer Memo:</span>
                         <strong style={{ color: "#0f172a" }}>{qrTransferInfo}</strong>
                       </div>
                     </div>
                   </div>
                   <p style={{ fontSize: "12px", color: "#64748b", marginTop: "10px", textAlign: "center" }}>
-                    💡 Sử dụng bất kỳ App ngân hàng nào (Vietcombank, MBBank, Techcombank, MoMo...) để quét mã và bấm nút đặt hàng bên dưới.
+                    💡 Use any banking app (Vietcombank, MBBank, Techcombank, MoMo...) to scan the QR code and click the confirm button below.
                   </p>
                 </div>
               )}
@@ -305,7 +305,7 @@ export default function Checkout() {
               {placing ? (
                 <span className="spinner-text">Processing Order...</span>
               ) : (
-                paymentMethod === "bank_transfer" ? "Xác Nhận Đã Chuyển Khoản & Đặt Hàng" : "Đặt Hàng (Thanh Toán COD)"
+                paymentMethod === "bank_transfer" ? "Confirm Bank Transfer & Place Order" : "Place Order (Cash on Delivery)"
               )}
             </button>
           </form>
@@ -329,12 +329,12 @@ export default function Checkout() {
                     <span className="checkout-item-size">Size: {it.selectedSize}</span>
                   )}
                   <div className="checkout-item-price-row">
-                    <span className="unit-price">{Number(it.price).toLocaleString()}đ</span>
+                    <span className="unit-price">{Number(it.price).toLocaleString()} VND</span>
                     <span className="unit-qty">× {it.qty}</span>
                   </div>
                 </div>
                 <div className="checkout-item-subtotal">
-                  {(Number(it.price) * Number(it.qty)).toLocaleString()}đ
+                  {(Number(it.price) * Number(it.qty)).toLocaleString()} VND
                 </div>
               </div>
             ))}
@@ -343,7 +343,7 @@ export default function Checkout() {
           <div className="checkout-calc-block">
             <div className="calc-row">
               <span>Subtotal ({cart.length} {cart.length === 1 ? "item" : "items"})</span>
-              <span className="amount">{subtotal.toLocaleString()}đ</span>
+              <span className="amount">{subtotal.toLocaleString()} VND</span>
             </div>
             <div className="calc-row">
               <span>Shipping</span>
@@ -351,7 +351,7 @@ export default function Checkout() {
             </div>
             <div className="calc-row total-row">
               <span>Total Amount</span>
-              <span className="total-amount">{total.toLocaleString()}đ</span>
+              <span className="total-amount">{total.toLocaleString()} VND</span>
             </div>
           </div>
 

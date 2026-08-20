@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";  // ⬅️ PHẢI import
+import { AuthProvider } from "./context/AuthContext.jsx";  
 
 /* CSS */
 import "./index.css";
@@ -26,7 +26,7 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <AuthProvider>
       <CartProvider>
-        {/* Scoping để hạn chế “đụng” style */}
+        
         <div className="theme-template">
           <App />
         </div>

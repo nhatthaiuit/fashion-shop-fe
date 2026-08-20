@@ -24,16 +24,16 @@ import { orderExporter } from '../components/CustomOrderExporter';
 import '../styles/AdminStyles.css';
 
 const statusChoices = [
-  { id: "pending", name: "pending (Chờ xác nhận)" },
-  { id: "processing", name: "processing (Đang đóng gói)" },
-  { id: "shipped", name: "shipped (Đang giao)" },
-  { id: "completed", name: "completed (Hoàn tất)" },
-  { id: "cancelled", name: "cancelled (Đã hủy)" },
+  { id: "pending", name: "Pending (Awaiting Confirmation)" },
+  { id: "processing", name: "Processing (Preparing Order)" },
+  { id: "shipped", name: "Shipped (In Transit)" },
+  { id: "completed", name: "Completed (Delivered)" },
+  { id: "cancelled", name: "Cancelled" },
 ];
 
 const paymentMethodChoices = [
-  { id: "cod", name: "COD" },
-  { id: "bank_transfer", name: "BANK TRANSFER" },
+  { id: "cod", name: "Cash on Delivery (COD)" },
+  { id: "bank_transfer", name: "Bank Transfer (VietQR)" },
 ];
 
 const orderFilters = [
@@ -44,11 +44,11 @@ const orderFilters = [
 
 const getStatusColor = (status) => {
     switch(status) {
-        case 'pending': return 'warning';    // Vàng cam (Chờ gọi xác nhận COD)
-        case 'processing': return 'info';      // Xanh dương (Đã thanh toán / Đang đóng gói)
-        case 'shipped': return 'secondary';  // Tím (Đang giao)
-        case 'completed': return 'success';  // Xanh lá (Hoàn tất)
-        case 'cancelled': return 'error';    // Đỏ (Hủy)
+        case 'pending': return 'warning';    // Amber (Pending Confirmation)
+        case 'processing': return 'info';      // Blue (Paid / Processing)
+        case 'shipped': return 'secondary';  // Purple (Shipped)
+        case 'completed': return 'success';  // Green (Completed)
+        case 'cancelled': return 'error';    // Red (Cancelled)
         default: return 'default';
     }
 };
@@ -102,7 +102,7 @@ export const OrderList = (props) => (
       />
       <FunctionField 
         label="Total" 
-        render={record => new Intl.NumberFormat('vi-VN').format(record.total_amount) + ' VNĐ'}
+        render={record => new Intl.NumberFormat('en-US').format(record.total_amount) + ' VND'}
       />
       <TextField source="customer_name" label="Name" />
       <TextField source="phone" label="Phone" />
@@ -188,7 +188,7 @@ export const OrderShow = (props) => (
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Order Summary</Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                             <Typography color="textSecondary">Total Amount</Typography>
-                            <FunctionField render={record => <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>{new Intl.NumberFormat('vi-VN').format(record.total_amount)} VNĐ</Typography>} />
+                            <FunctionField render={record => <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>{new Intl.NumberFormat('en-US').format(record.total_amount)} VND</Typography>} />
                         </Box>
                         <Divider />
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
@@ -227,9 +227,9 @@ export const OrderShow = (props) => (
                                         return "Unknown Product";
                                     }}
                                 />
-                                <FunctionField label="Unit Price" render={record => new Intl.NumberFormat('vi-VN').format(record.unit_price) + ' VNĐ'} />
+                                <FunctionField label="Unit Price" render={record => new Intl.NumberFormat('en-US').format(record.unit_price) + ' VND'} />
                                 <NumberField source="quantity" label="Qty" />
-                                <FunctionField label="Subtotal" render={record => <Typography fontWeight="600">{new Intl.NumberFormat('vi-VN').format(record.unit_price * record.quantity)} VNĐ</Typography>} />
+                                <FunctionField label="Subtotal" render={record => <Typography fontWeight="600">{new Intl.NumberFormat('en-US').format(record.unit_price * record.quantity)} VND</Typography>} />
                             </Datagrid>
                         </ArrayField>
                     </CardContent>
