@@ -1,4 +1,30 @@
 
+.admin-app-wrapper,
+.admin-app-wrapper > div,
+.RaLayout-root,
+.RaLayout-appFrame,
+.RaLayout-contentWithSidebar,
+.RaLayout-content,
+.RaList-root,
+.RaList-main,
+.MuiContainer-root {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.RaDatagrid-root {
+    width: 100% !important;
+}
+
+.RaDatagrid-table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+
+
 /* ===========================
    LAYOUT OVERRIDES (TOP MENU)
    =========================== */

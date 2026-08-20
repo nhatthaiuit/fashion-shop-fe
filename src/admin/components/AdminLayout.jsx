@@ -14,29 +14,31 @@ const MyAppBar = (props) => {
     const location = useLocation();
     const { user, logout } = useAuth();
     
-    const isProducts = location.pathname.startsWith('/admin/products');
+    const isProducts = location.pathname.startsWith('/admin/products') || location.pathname === '/admin' || location.pathname === '/admin/';
     const isOrders = location.pathname.startsWith('/admin/orders');
 
     return (
-        <header className="main-header" style={{ position: 'sticky', top: 0, zIndex: 1100 }}>
+        <header className="main-header admin-custom-header" style={{ position: 'sticky', top: 0, zIndex: 1100, width: '100%', left: 0, right: 0, padding: '20px 40px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="logo_header" style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
                 <span 
                     className="logo_Northside" 
-                    style={{ cursor: 'pointer' }} 
+                    style={{ cursor: 'pointer', fontSize: '24px', fontWeight: 'bold', color: '#fff' }} 
                     onClick={() => navigate('/admin/products')}
                 >
                     UIT Store ADMIN
                 </span>
             </div>
             
-            <ul className="navigate_header" style={{ margin: 0, padding: 0, flex: 2, display: 'flex', justifyContent: 'center', gap: '50px' }}>
+            <ul className="navigate_header" style={{ margin: 0, padding: 0, flex: 2, display: 'flex', justifyContent: 'center', gap: '50px', listStyle: 'none' }}>
                 <li>
                     <span 
                         className="title_header"
                         onClick={() => navigate('/admin/products')} 
                         style={{ 
                             color: isProducts ? '#EE5022' : '#fff', 
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '18px'
                         }}
                     >
                         PRODUCTS
@@ -48,7 +50,9 @@ const MyAppBar = (props) => {
                         onClick={() => navigate('/admin/orders')} 
                         style={{ 
                             color: isOrders ? '#EE5022' : '#fff', 
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '18px'
                         }}
                     >
                         ORDERS
@@ -84,9 +88,9 @@ const MyAppBar = (props) => {
 export const AdminLayout = (props) => {
     const { children } = props;
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', backgroundColor: '#f9fafb' }}>
             <MyAppBar />
-            <main style={{ flex: 1, padding: '30px', width: '100%', boxSizing: 'border-box' }}>
+            <main style={{ flex: 1, padding: '30px 40px', width: '100%', maxWidth: '1400px', margin: '0 auto', boxSizing: 'border-box' }}>
                 {children}
             </main>
         </div>
