@@ -6,7 +6,7 @@ import { useCart } from "../context/CartContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import "../styles/Checkout.css";
 
-const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend-v4fi.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
 
 export default function Checkout() {
   const nav = useNavigate();

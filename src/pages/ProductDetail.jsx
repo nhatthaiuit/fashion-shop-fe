@@ -8,7 +8,7 @@ import "../styles/ProductDetail.css";
 import ImageGallery from "../components/products/ImageGallery";
 import SizeSelector from "../components/products/SizeSelector";
 
-const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend-v4fi.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
 
 export default function ProductDetail() {
   const { id } = useParams();
