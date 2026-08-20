@@ -65,12 +65,15 @@ For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and 
 
 ```
 .
+├── public/          # Static assets (images, banners, logo)
 ├── src/
-│   ├── admin/       # React-Admin Dashboard (Pages, Providers, Custom Components)
-│   ├── components/  # Reusable UI components (Navbar, Footer, ProductCard)
-│   ├── pages/       # Customer-facing pages (Home, Shop, Cart, Checkout)
-│   ├── context/     # Global state management (AuthContext, CartContext)
-│   ├── utils/       # Helper functions and formatters
-│   └── App.jsx      # Main application routing and entry point
-└── public/          # Static assets
+│   ├── admin/       # React-Admin Dashboard (Resources, Providers, Layout, Exporters)
+│   ├── api/         # Axios client and API utilities
+│   ├── assets/      # Component-level static assets
+│   ├── components/  # Reusable UI components (Layout, Products, Home)
+│   ├── context/     # React Context state (AuthContext, CartContext)
+│   ├── pages/       # Customer-facing views (Home, Products, Cart, Checkout, Profile, ThankYou)
+│   ├── styles/      # Vanilla CSS stylesheets
+│   ├── App.jsx      # Main application router
+│   └── main.jsx     # React entry point
 ```
