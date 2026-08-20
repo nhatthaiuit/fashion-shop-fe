@@ -13,7 +13,7 @@ export default function Checkout() {
   const { cart, clear } = useCart();
 
   const [orderPlaced, setOrderPlaced] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // cod | paypal
+  const [paymentMethod, setPaymentMethod] = useState("cod"); // cod | bank_transfer
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -96,15 +96,18 @@ export default function Checkout() {
       setPlacing(true);
       const payload = createOrderPayload();
 
-      if (paymentMethod === "paypal") {
+      if (paymentMethod === "bank_transfer") {
         payload.payment_result = {
-          id: "MOCK_PAYPAL_" + Date.now(),
+          id: "VIETQR_" + Date.now(),
           status: "COMPLETED",
           update_time: new Date().toISOString(),
-          email_address: "mockpayer@paypal.com"
         };
         payload.is_paid = true;
         payload.paid_at = new Date();
+        payload.status = "processing";
+      } else {
+        payload.is_paid = false;
+        payload.status = "pending";
       }
 
       // 1. Create Order
@@ -124,6 +127,10 @@ export default function Checkout() {
   };
 
   const isFieldInvalid = (n) => touched[n] && !form[n].trim();
+
+  // Dynamic VietQR generator
+  const qrTransferInfo = `UIT ${form.phone ? form.phone.replace(/\s+/g, "") : "ORDER"}`;
+  const vietQrUrl = `https://img.vietqr.io/image/vcb-0123456789-compact2.png?amount=${total}&addInfo=${encodeURIComponent(qrTransferInfo)}&accountName=UIT%20FASHION%20STORE`;
 
   return (
     <div className="checkout-page-wrapper">
@@ -209,7 +216,7 @@ export default function Checkout() {
                 onChange={onChange}
                 className="form-textarea"
                 placeholder="Notes for shipping or special instructions..."
-                rows={3}
+                rows={2}
               />
             </div>
 
@@ -228,24 +235,68 @@ export default function Checkout() {
                   />
                   <div className="payment-option-text">
                     <span className="payment-option-title">💵 Cash on Delivery (COD)</span>
-                    <span className="payment-option-desc">Pay with cash upon delivery</span>
+                    <span className="payment-option-desc">Thanh toán bằng tiền mặt khi nhận hàng (Cần gọi xác nhận)</span>
                   </div>
                 </label>
 
-                <label className={`payment-option ${paymentMethod === "paypal" ? "active" : ""}`}>
+                <label className={`payment-option ${paymentMethod === "bank_transfer" ? "active" : ""}`}>
                   <input
                     type="radio"
                     name="payment"
-                    value="paypal"
-                    checked={paymentMethod === "paypal"}
-                    onChange={() => setPaymentMethod("paypal")}
+                    value="bank_transfer"
+                    checked={paymentMethod === "bank_transfer"}
+                    onChange={() => setPaymentMethod("bank_transfer")}
                   />
                   <div className="payment-option-text">
-                    <span className="payment-option-title">💳 PayPal (Visa / Master)</span>
-                    <span className="payment-option-desc">Fast, secure online payment</span>
+                    <span className="payment-option-title">⚡ Chuyển khoản VietQR (Ngân hàng)</span>
+                    <span className="payment-option-desc">Quét mã QR chuyển khoản nhanh 24/7 (Được duyệt đóng gói ngay)</span>
                   </div>
                 </label>
               </div>
+
+              {/* VietQR Display Box when Bank Transfer is selected */}
+              {paymentMethod === "bank_transfer" && (
+                <div className="vietqr-payment-box animate-fade-in" style={{ marginTop: "16px", padding: "20px", background: "#f8fafc", border: "2px dashed #0284c7", borderRadius: "12px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+                    <i className="fa-solid fa-qrcode" style={{ fontSize: "20px", color: "#0284c7" }}></i>
+                    <span style={{ fontWeight: "bold", fontSize: "15px", color: "#0f172a" }}>Quét mã VietQR để thanh toán</span>
+                  </div>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", background: "#ffffff", padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                    <img 
+                      src={vietQrUrl} 
+                      alt="VietQR Code" 
+                      style={{ width: "200px", height: "200px", objectFit: "contain", border: "1px solid #eee", borderRadius: "8px" }}
+                    />
+                    
+                    <div style={{ width: "100%", fontSize: "13px", color: "#334155", background: "#f1f5f9", padding: "12px", borderRadius: "6px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                        <span>Ngân hàng:</span>
+                        <strong>Vietcombank (VCB)</strong>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                        <span>Số tài khoản:</span>
+                        <strong style={{ color: "#0284c7" }}>0123456789</strong>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                        <span>Chủ tài khoản:</span>
+                        <strong>UIT FASHION STORE</strong>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                        <span>Số tiền:</span>
+                        <strong style={{ color: "#EE5022", fontSize: "14px" }}>{total.toLocaleString()}đ</strong>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <span>Nội dung CK:</span>
+                        <strong style={{ color: "#0f172a" }}>{qrTransferInfo}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: "12px", color: "#64748b", marginTop: "10px", textAlign: "center" }}>
+                    💡 Sử dụng bất kỳ App ngân hàng nào (Vietcombank, MBBank, Techcombank, MoMo...) để quét mã và bấm nút đặt hàng bên dưới.
+                  </p>
+                </div>
+              )}
             </div>
 
             {err && <div className="checkout-alert-error">⚠️ {err}</div>}
@@ -254,7 +305,7 @@ export default function Checkout() {
               {placing ? (
                 <span className="spinner-text">Processing Order...</span>
               ) : (
-                `Place Order (${paymentMethod.toUpperCase()})`
+                paymentMethod === "bank_transfer" ? "Xác Nhận Đã Chuyển Khoản & Đặt Hàng" : "Đặt Hàng (Thanh Toán COD)"
               )}
             </button>
           </form>

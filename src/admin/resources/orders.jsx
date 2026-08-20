@@ -24,27 +24,65 @@ import { orderExporter } from '../components/CustomOrderExporter';
 import '../styles/AdminStyles.css';
 
 const statusChoices = [
-  { id: "pending", name: "pending" },
-  { id: "processing", name: "processing" },
-  { id: "shipped", name: "shipped" },
-  { id: "completed", name: "completed" },
-  { id: "cancelled", name: "cancelled" },
+  { id: "pending", name: "pending (Chờ xác nhận)" },
+  { id: "processing", name: "processing (Đang đóng gói)" },
+  { id: "shipped", name: "shipped (Đang giao)" },
+  { id: "completed", name: "completed (Hoàn tất)" },
+  { id: "cancelled", name: "cancelled (Đã hủy)" },
+];
+
+const paymentMethodChoices = [
+  { id: "cod", name: "COD" },
+  { id: "bank_transfer", name: "BANK TRANSFER" },
 ];
 
 const orderFilters = [
   <TextInput key="search" source="customer_name" label="Customer Name" alwaysOn />,
-  <SelectInput key="status" source="status" label="Status" choices={statusChoices} />
+  <SelectInput key="status" source="status" label="Status" choices={statusChoices} />,
+  <SelectInput key="payment_method" source="payment_method" label="Payment Method" choices={paymentMethodChoices} />
 ];
 
 const getStatusColor = (status) => {
     switch(status) {
-        case 'pending': return 'warning';
-        case 'processing': return 'info';
-        case 'shipped': return 'secondary';
-        case 'completed': return 'success';
-        case 'cancelled': return 'error';
+        case 'pending': return 'warning';    // Vàng cam (Chờ gọi xác nhận COD)
+        case 'processing': return 'info';      // Xanh dương (Đã thanh toán / Đang đóng gói)
+        case 'shipped': return 'secondary';  // Tím (Đang giao)
+        case 'completed': return 'success';  // Xanh lá (Hoàn tất)
+        case 'cancelled': return 'error';    // Đỏ (Hủy)
         default: return 'default';
     }
+};
+
+const renderPaymentMethodChip = (record) => {
+    const method = record?.payment_method || 'cod';
+    if (method === 'bank_transfer' || method === 'vietqr') {
+        return (
+            <Chip 
+                label="⚡ BANK TRANSFER" 
+                size="small" 
+                sx={{ 
+                    fontWeight: 700, 
+                    fontSize: '11px',
+                    backgroundColor: '#e0f2fe', 
+                    color: '#0369a1',
+                    border: '1px solid #bae6fd'
+                }} 
+            />
+        );
+    }
+    return (
+        <Chip 
+            label="💵 COD" 
+            size="small" 
+            sx={{ 
+                fontWeight: 700, 
+                fontSize: '11px',
+                backgroundColor: '#fef3c7', 
+                color: '#92400e',
+                border: '1px solid #fde68a'
+            }} 
+        />
+    );
 };
 
 export const OrderList = (props) => (
@@ -55,6 +93,7 @@ export const OrderList = (props) => (
     actions={<CustomOrderListActions />}
     exporter={orderExporter}
     filters={orderFilters}
+    sx={{ width: '100%', '& .RaDatagrid-table': { width: '100%', minWidth: '100%', tableLayout: 'auto' } }}
   >
     <Datagrid rowClick="show" bulkActionButtons={false}>
       <FunctionField
@@ -69,14 +108,24 @@ export const OrderList = (props) => (
       <TextField source="phone" label="Phone" />
       <TextField source="shipping_address" label="Address" />
       <FunctionField 
+        label="Payment Method" 
+        render={renderPaymentMethodChip}
+      />
+      <FunctionField 
         label="Status" 
-        render={record => <Chip label={record.status.toUpperCase()} color={getStatusColor(record.status)} size="small" sx={{ fontWeight: 'bold' }} />}
+        render={record => (
+            <Chip 
+                label={record.status ? record.status.toUpperCase() : 'PENDING'} 
+                color={getStatusColor(record.status)} 
+                size="small" 
+                sx={{ fontWeight: 'bold', fontSize: '11px' }} 
+            />
+        )}
       />
       <DateField source="created_at" showTime label="Created at" />
     </Datagrid>
   </List>
 );
-
 
 const OrderShowActions = () => {
     const navigate = useNavigate();
@@ -92,9 +141,8 @@ const OrderShowActions = () => {
 
 export const OrderShow = (props) => (
   <Show {...props} component="div" actions={<OrderShowActions />}>
-
     <SimpleShowLayout sx={{ p: 0, m: 0, '& .RaSimpleShowLayout-row': { display: 'block', padding: 0, border: 'none' } }}>
-      <Box sx={{ maxWidth: 1000, margin: '0 auto', p: 3, width: '100%' }}>
+      <Box sx={{ maxWidth: 1000, margin: '0 auto', p: 3, width: '100%', boxSizing: 'border-box' }}>
         <Grid container spacing={3}>
             
             <Grid size={{ xs: 12 }}>
@@ -104,13 +152,16 @@ export const OrderShow = (props) => (
                             <Typography variant="overline" color="textSecondary">Order ID</Typography>
                             <FunctionField render={record => <Typography variant="h5" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{record.id}</Typography>} />
                         </Box>
-                        <FunctionField render={record => <Chip label={record.status.toUpperCase()} color={getStatusColor(record.status)} sx={{ fontWeight: 'bold', px: 2, py: 2.5, fontSize: '1rem', borderRadius: 8 }} />} />
+                        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                            <FunctionField render={renderPaymentMethodChip} />
+                            <FunctionField render={record => <Chip label={record.status ? record.status.toUpperCase() : 'PENDING'} color={getStatusColor(record.status)} sx={{ fontWeight: 'bold', px: 2, py: 2.5, fontSize: '1rem', borderRadius: 8 }} />} />
+                        </Box>
                     </CardContent>
                 </Card>
             </Grid>
 
             <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%' }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%', boxSizing: 'border-box' }}>
                     <CardContent sx={{ p: 3 }}>
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Customer Details</Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -132,12 +183,17 @@ export const OrderShow = (props) => (
             </Grid>
 
             <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%' }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%', boxSizing: 'border-box' }}>
                     <CardContent sx={{ p: 3 }}>
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Order Summary</Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                             <Typography color="textSecondary">Total Amount</Typography>
                             <FunctionField render={record => <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>{new Intl.NumberFormat('vi-VN').format(record.total_amount)} VNĐ</Typography>} />
+                        </Box>
+                        <Divider />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
+                            <Typography color="textSecondary">Payment Method</Typography>
+                            <FunctionField render={renderPaymentMethodChip} />
                         </Box>
                         <Divider />
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>

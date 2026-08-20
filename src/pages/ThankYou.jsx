@@ -5,9 +5,10 @@ export default function ThankYou() {
   const location = useLocation();
   const { user } = useAuth();
   
-  // Extract order ID if passed from Checkout
-  const orderId = location.state?.order?._id;
+  const order = location.state?.order;
+  const orderId = order?._id || order?.id;
   const shortOrderId = orderId ? orderId.substring(orderId.length - 8).toUpperCase() : "";
+  const isBankTransfer = order?.payment_method === "bank_transfer";
 
   return (
     <main
@@ -31,7 +32,7 @@ export default function ThankYou() {
         <div style={{
           width: "80px",
           height: "80px",
-          background: "#EE5022",
+          background: isBankTransfer ? "#0284c7" : "#EE5022",
           color: "#fff",
           borderRadius: "50%",
           display: "flex",
@@ -39,21 +40,29 @@ export default function ThankYou() {
           justifyContent: "center",
           fontSize: "40px",
           margin: "0 auto 24px auto",
-          boxShadow: "0 8px 20px rgba(238, 80, 34, 0.3)"
+          boxShadow: isBankTransfer ? "0 8px 20px rgba(2, 132, 199, 0.3)" : "0 8px 20px rgba(238, 80, 34, 0.3)"
         }}>
           <i className="fa-solid fa-check"></i>
         </div>
         
-        <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "#111" }}>Thank You For Your Order!</h2>
+        <h2 style={{ fontSize: "2rem", marginBottom: "0.5rem", color: "#111" }}>Thank You For Your Order!</h2>
         
         {shortOrderId && (
           <p style={{ fontSize: "1.1rem", color: "#555", fontWeight: "600", marginBottom: "1rem" }}>
             Order ID: #{shortOrderId}
           </p>
         )}
+
+        <div style={{ margin: "16px 0 24px 0", display: "inline-block", padding: "8px 16px", borderRadius: "20px", background: isBankTransfer ? "#e0f2fe" : "#fef3c7", color: isBankTransfer ? "#0369a1" : "#92400e", fontWeight: "bold", fontSize: "14px" }}>
+          {isBankTransfer ? "⚡ ĐÃ THANH TOÁN (PROCESSING) - ĐANG CHUẨN BỊ HÀNG" : "💵 COD (PENDING) - CHỜ GỌI XÁC NHẬN"}
+        </div>
         
-        <p style={{ fontSize: "1.1rem", color: "#666", lineHeight: "1.6", marginBottom: "2rem" }}>
-          We have received your order and will begin processing it right away. We will notify you as soon as your order is shipped.
+        <p style={{ fontSize: "1.05rem", color: "#666", lineHeight: "1.6", marginBottom: "2rem" }}>
+          {isBankTransfer ? (
+            "Cảm ơn bạn! Đơn hàng đã được thanh toán thành công qua chuyển khoản ngân hàng. Đơn hàng đã được duyệt và chuyển sang bộ phận kho để đóng gói ngay."
+          ) : (
+            "Cảm ơn bạn đã đặt hàng! Đơn hàng của bạn đã được ghi nhận. Nhân viên chăm sóc khách hàng của shop sẽ sớm liên hệ qua số điện thoại để xác nhận đơn hàng trước khi gửi đi."
+          )}
         </p>
 
         <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
