@@ -14,7 +14,6 @@ export default function ProductDetail() {
   const { id } = useParams();
   const { add } = useCart();
 
-
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -22,8 +21,11 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load sản phẩm hiện tại
+  // Load current product & reset state on ID change
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setSelectedSize(null);
+    setQty(1);
     setLoading(true);
     setError(null);
     axios
@@ -33,7 +35,7 @@ export default function ProductDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // Gợi ý sản phẩm cùng category
+  // Suggested products from same category
   useEffect(() => {
     if (!product?.category) return;
     axios
@@ -50,18 +52,18 @@ export default function ProductDetail() {
       .catch(() => { });
   }, [product?.category, product?._id]);
 
-  // ===== Logic hiển thị theo category/sizes =====
-  const needSize = useMemo(
-    () => ["Top", "Bottom", "Accessories"].includes(product?.category),
-    [product?.category]
-  );
+  // ===== Logic according to category / sizes =====
   const hasSizes = useMemo(
-    () => Array.isArray(product?.sizes) && product.sizes.length > 0,
+    () => Array.isArray(product?.sizes) && product.sizes.length > 0 && product.sizes.some((s) => (s.stock || 0) > 0),
     [product?.sizes]
   );
-  const canSelectSize = needSize && hasSizes;
+  const needSize = useMemo(
+    () => ["Top", "Bottom"].includes(product?.category),
+    [product?.category]
+  );
+  const canSelectSize = hasSizes;
 
-  // tồn hiện có
+  // Available stock
   const stockAvailable = useMemo(() => {
     if (!product) return false;
     if (canSelectSize) {
@@ -73,19 +75,17 @@ export default function ProductDetail() {
   const outOfStock = !stockAvailable;
 
   const getStock = () => {
-    // max theo size đã chọn hoặc count_in_stock
-    if (product.sizes?.length && selectedSize) {
-      const s = product.sizes.find(x => x.label === selectedSize);
-      return s ? s.stock : 0;
+    if (canSelectSize && selectedSize) {
+      const s = product.sizes.find((x) => x.label === selectedSize);
+      return s ? (s.stock || 0) : 0;
     }
-    // ko size (phụ kiện...)
     return product.count_in_stock || 99;
   };
 
   const selectedSizeStock = useMemo(() => {
     if (!product) return 0;
     return getStock();
-  }, [product, selectedSize, getStock]);
+  }, [product, selectedSize, canSelectSize]);
 
   if (loading) return <div className="loading">Loading product...</div>;
   if (error) return <div className="error">Error loading product: {error}</div>;
@@ -94,30 +94,30 @@ export default function ProductDetail() {
   return (
     <main className="product_detail_page">
       <div className="product_detail_container">
-        {/* Ảnh sản phẩm (gallery) */}
+        {/* Product Gallery */}
         <div className="product_detail_image">
           <ImageGallery main={product.image} images={product.images} />
         </div>
 
-        {/* Thông tin sản phẩm */}
+        {/* Product Information */}
         <div className="pt-20">
           <h2 className="text-3xl font-bold mb-4">{product.product_name}</h2>
-          
+
           {product.original_price && product.original_price > product.price ? (
-            <div className="mb-4" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <p className="text-xl text-red-600 font-semibold m-0">
-                    {Number(product.price || 0).toLocaleString()}đ
-                </p>
-                <p style={{ textDecoration: 'line-through', color: '#888', margin: 0 }}>
-                    {Number(product.original_price).toLocaleString()}đ
-                </p>
-                <div className="discount-badge-detail">
-                    -{Math.round(((product.original_price - product.price) / product.original_price) * 100)}%
-                </div>
+            <div className="mb-4" style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+              <p className="text-xl text-red-600 font-semibold m-0">
+                {Number(product.price || 0).toLocaleString()}đ
+              </p>
+              <p style={{ textDecoration: "line-through", color: "#888", margin: 0 }}>
+                {Number(product.original_price).toLocaleString()}đ
+              </p>
+              <div className="discount-badge-detail">
+                -{Math.round(((product.original_price - product.price) / product.original_price) * 100)}%
+              </div>
             </div>
           ) : (
             <p className="text-xl mb-4 text-red-600 font-semibold">
-                {Number(product.price || 0).toLocaleString()}đ
+              {Number(product.price || 0).toLocaleString()}đ
             </p>
           )}
 
@@ -125,21 +125,22 @@ export default function ProductDetail() {
             {product.description || "No description available"}
           </p>
 
-          {/* Chọn size: chỉ render khi cần & có sizes */}
-          {canSelectSize && (
+          {/* Size Selector: render when product has configured sizes */}
+          {canSelectSize ? (
             <div className="product_detail_size">
               <label>Select Size:</label>
               <SizeSelector sizes={product.sizes} onChange={setSelectedSize} />
             </div>
-          )}
-          {/* Cảnh báo nếu cần size nhưng chưa cấu hình */}
-          {needSize && !hasSizes && (
-            <p style={{ color: "#b45309", marginTop: 6 }}>
-              Product requires size selection but sizes are not configured.
-            </p>
+          ) : (
+            <div className="product_detail_size" style={{ marginBottom: "16px" }}>
+              <label style={{ marginRight: "10px" }}>Size:</label>
+              <span style={{ fontWeight: 600, color: "#111", padding: "4px 12px", background: "#f3f4f6", borderRadius: "4px", fontSize: "14px", border: "1px solid #e5e7eb" }}>
+                One Size (Freesize)
+              </span>
+            </div>
           )}
 
-          {/* Số lượng */}
+          {/* Quantity */}
           <div className="product_detail_qty">
             <label>Quantity:</label>
             <div className="qty-controls">
@@ -160,7 +161,8 @@ export default function ProductDetail() {
                 onChange={(e) => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedSizeStock)))}
                 disabled={outOfStock}
                 aria-label="Quantity"
-              />
+              >
+              </input>
               <button
                 type="button"
                 className="qty-btn"
@@ -173,11 +175,11 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Nút thêm vào giỏ */}
+          {/* Add to Cart Button */}
           <button
             className="btn_add_to_cart"
             disabled={outOfStock || (canSelectSize && !selectedSize)}
-            onClick={() => add({ ...product, selectedSize }, qty)}
+            onClick={() => add({ ...product, selectedSize: canSelectSize ? selectedSize : "OneSize" }, qty)}
             title={outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "PLEASE SELECT A SIZE" : "ADD TO CART")}
           >
             {outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "SELECT SIZE TO ADD" : "+ ADD TO CART")}
@@ -185,7 +187,7 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* Related */}
+      {/* Related Products: You Might Also Like */}
       {related.length > 0 && (
         <section className="related_section">
           <h3 className="related_title">You might also like</h3>
@@ -200,12 +202,16 @@ export default function ProductDetail() {
                 <div className="related_media">
                   <img
                     src={p.image || "/img/products/default.jpg"}
-                    alt={p.name}
-                    onError={(e) => { if (e.currentTarget.src !== window.location.origin + "/img/products/default.jpg") { e.currentTarget.src = "/img/products/default.jpg"; } }}
+                    alt={p.product_name || p.name}
+                    onError={(e) => {
+                      if (e.currentTarget.src !== window.location.origin + "/img/products/default.jpg") {
+                        e.currentTarget.src = "/img/products/default.jpg";
+                      }
+                    }}
                   />
                 </div>
                 <div className="related_body">
-                  <div className="related_name">{p.name}</div>
+                  <div className="related_name">{p.product_name || p.name}</div>
                   <div className="related_price">
                     {Number(p.price || 0).toLocaleString()}đ
                   </div>

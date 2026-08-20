@@ -15,6 +15,7 @@ import Top from "./pages/Top";
 import Checkout from "./pages/Checkout";
 import ThankYou from "./pages/ThankYou";
 import Footer from "./components/layout/Footer";
+import ScrollToTop from "./components/layout/ScrollToTop";
 import AppAdmin from "./admin/AppAdmin.jsx";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
   if (isAdminPage) {
     return (
       <div className="admin-app-wrapper" style={{ width: "100%", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <ScrollToTop />
         <Routes>
           <Route path="/admin/*" element={<AppAdmin />} />
         </Routes>
@@ -37,6 +39,7 @@ export default function App() {
 
   return (
     <div className="app_wrapper">
+      <ScrollToTop />
       <Header />
       <main className="main-content">
         <Routes>
