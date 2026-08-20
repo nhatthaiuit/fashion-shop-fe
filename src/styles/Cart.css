@@ -3,14 +3,22 @@
    Minimalist & Sharp
    ========================= */
 
+.cart-page-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 70vh;
+}
+
 .cart-container {
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto !important;
   padding: 60px 40px;
   min-height: 70vh;
   font-family: Arial, sans-serif;
 }
-
 .cart-header {
   display: flex;
   align-items: baseline;

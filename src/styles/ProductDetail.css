@@ -2,6 +2,10 @@
    PRODUCT DETAIL PAGE
    ========================= */
 .product_detail_page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 60px 40px;
   background: #ffffff;
   min-height: 70vh;
@@ -9,8 +13,9 @@
 }
 
 .product_detail_container {
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto !important;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 80px;

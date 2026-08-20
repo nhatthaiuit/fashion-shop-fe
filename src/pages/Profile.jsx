@@ -62,7 +62,8 @@ export default function Profile() {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="profile-container">
+    <div className="profile-page-wrapper">
+      <div className="profile-container">
       <aside className="profile-sidebar">
         <div className="profile-avatar">
           <i className="fa-solid fa-user"></i>
@@ -160,6 +161,7 @@ export default function Profile() {
         )}
 
         </main>
+    </div>
     </div>
   );
 }

@@ -22,7 +22,8 @@ export default function Cart() {
   // Empty cart state
   if (cart.length === 0) {
     return (
-      <main className="cart-container">
+      <div className="cart-page-wrapper">
+        <main className="cart-container">
         <div className="cart-empty">
           <div className="cart-empty-icon">🛒</div>
           <h2>Your cart is empty</h2>
@@ -32,11 +33,13 @@ export default function Cart() {
           </Link>
         </div>
       </main>
+      </div>
     );
   }
 
   return (
-    <main className="cart-container">
+    <div className="cart-page-wrapper">
+      <main className="cart-container">
       {/* Header */}
       <div className="cart-header">
         <h2>Shopping Cart</h2>
@@ -151,5 +154,6 @@ export default function Cart() {
         </div>
       </div>
     </main>
+    </div>
   );
 }

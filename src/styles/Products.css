@@ -2,6 +2,10 @@
    PRODUCTS LIST PAGE
    ========================= */
 .products_page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: var(--space-2xl) var(--side-pad);
   background: var(--color-bg);
   color: var(--color-text);
@@ -9,6 +13,8 @@
 }
 
 .products_title {
+  width: 100%;
+  max-width: var(--max-width);
   text-align: center;
   font-size: 28px;
   font-weight: 800;
@@ -18,6 +24,7 @@
 }
 
 .products_grid {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
