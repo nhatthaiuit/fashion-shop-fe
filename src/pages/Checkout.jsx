@@ -126,7 +126,8 @@ export default function Checkout() {
   const isFieldInvalid = (n) => touched[n] && !form[n].trim();
 
   return (
-    <main className="checkout-container">
+    <div className="checkout-page-wrapper">
+      <main className="checkout-container">
       {/* Header matching UIT Store & Cart page */}
       <div className="checkout-header">
         <div className="checkout-header-info">
@@ -313,6 +314,7 @@ export default function Checkout() {
           </div>
         </aside>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

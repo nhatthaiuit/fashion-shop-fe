@@ -8,14 +8,22 @@ li {
 }
 html {
     scroll-behavior: smooth;
+    width: 100%;
 }
 body {
     background-color: #fff;
     color: #000;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+}
+#root, .theme-template {
+    width: 100%;
+    min-height: 100vh;
 }
 h1, h2, h3, h4, h5, h6, .logo_Northside, .title_header, .title_home_product, .title_home_poster {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 a {
     text-decoration: none;

@@ -168,12 +168,15 @@ footer{
 
 
 .app_wrapper {
+  width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 .main-content {
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
