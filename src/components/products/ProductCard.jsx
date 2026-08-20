@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 
-const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend-v4fi.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-be-one.vercel.app" : "http://localhost:4000")).replace(/\/$/, "");
 export default function ProductCard({ p }) {
   
   const isOutOfStock = p.count_in_stock <= 0;

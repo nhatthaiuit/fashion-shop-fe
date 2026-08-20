@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_BASE = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend-v4fi.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
+export const API_BASE = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-be-one.vercel.app" : "http://localhost:4000")).replace(/\/$/, "");
 
 const api = axios.create({ baseURL: API_BASE });
 

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../components/products/ProductCard";
 import "../styles/Home.css";
 
-const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-backend-v4fi.onrender.com" : "http://localhost:4000")).replace(/\/$/, "");
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://fashion-shop-be-one.vercel.app" : "http://localhost:4000")).replace(/\/$/, "");
 
 export default function Category({ title, category }) {
   const [list, setList] = useState([]);

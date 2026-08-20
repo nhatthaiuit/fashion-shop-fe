@@ -11,7 +11,7 @@ For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and 
 
 ## 🌐 Live Application
 - **Web UI**: **[https://fashion-shop-frontend-uit.vercel.app](https://fashion-shop-frontend-uit.vercel.app)**
-- **Backend API Docs**: **[https://fashion-shop-backend.onrender.com/docs](https://fashion-shop-backend.onrender.com/docs)**
+- **Backend API Docs**: **[https://fashion-shop-be-one.vercel.app/docs](https://fashion-shop-be-one.vercel.app/docs)**
 
 ### 🔐 Test Accounts (For Recruiters/Testers)
 - **Admin**: `admin@fashionshop.com` / `123456`
