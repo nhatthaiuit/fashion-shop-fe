@@ -8,6 +8,8 @@ import Bottom from "./pages/Bottom";
 import Accessories from "./pages/Accessories";
 import Sale from "./pages/Sale";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
 import Top from "./pages/Top";
 import Checkout from "./pages/Checkout";
@@ -21,13 +23,14 @@ export default function App() {
   const path = location.pathname;
 
   // Determine which footer to show
-  const showNoFooter = path.startsWith('/admin') || path === '/checkout';
+  const isAdminPage = path.startsWith('/admin');
+  const showNoFooter = isAdminPage || path === '/checkout';
   const showFullFooter = !showNoFooter;
 
   return (
     <div className="app_wrapper">
-      <Header />
-      <main className="main-content">
+      {!isAdminPage && <Header />}
+      <main className="main-content" style={{ paddingTop: isAdminPage ? 0 : undefined }}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -36,6 +39,8 @@ export default function App() {
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/sale" element={<Sale />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/top" element={<Top />} />
         <Route path="*" element={<Navigate to="/" replace />} />

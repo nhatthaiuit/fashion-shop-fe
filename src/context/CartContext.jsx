@@ -21,15 +21,16 @@ export function CartProvider({ children }) {
   const add = (product, qty = 1) => {
     setCart(cur => {
       const next = [...cur];
-      const i = next.findIndex(x => x._id === product._id);
+      const cartItemId = product._id + (product.selectedSize ? '-' + product.selectedSize : '');
+      const i = next.findIndex(x => (x.cartItemId || x._id) === cartItemId);
       if (i >= 0) next[i].qty += qty;
-      else next.push({ ...product, qty });
+      else next.push({ ...product, qty, cartItemId });
       return next;
     });
   };
 
-  const remove = (id) => setCart(c => c.filter(x => x._id !== id));
-  const setQty  = (id, qty) => setCart(c => c.map(x => x._id === id ? { ...x, qty: Math.max(1, Number(qty) || 1) } : x));
+  const remove = (cartItemId) => setCart(c => c.filter(x => (x.cartItemId || x._id) !== cartItemId));
+  const setQty  = (cartItemId, qty) => setCart(c => c.map(x => (x.cartItemId || x._id) === cartItemId ? { ...x, qty: Math.max(1, Number(qty) || 1) } : x));
   const clear   = () => setCart([]);
 
   const value = useMemo(() => ({ cart, add, remove, setQty, clear }), [cart]);

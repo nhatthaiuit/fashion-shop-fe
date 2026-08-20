@@ -10,11 +10,11 @@ export default function Footer() {
         <ul className="contact_footer">
             <li>
                 <div className="item_title_contact">
-                    <p className="title_contact">LIÊN HỆ</p>
+                    <p className="title_contact">CONTACT US</p>
                 </div>
                 <div className="content_contact">
                     <ul>
-                        <li className="address_contact"><i className="fa-solid fa-location-dot"></i> Khu phố 6, P.Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh</li>
+                        <li className="address_contact"><i className="fa-solid fa-location-dot"></i> Quarter 6, Linh Trung Ward, Thu Duc City, HCMC</li>
                         <li className="address_contact"><i className="fa-solid fa-phone"></i> Hotline: 0388874855</li>
                         <li className="address_contact"><i className="fa-solid fa-envelope"></i> Email: nhatthaidx@gmail.com</li>
                     </ul>
@@ -22,30 +22,30 @@ export default function Footer() {
             </li>
             <li>
                 <div className="item_title_contact">
-                    <p className="title_contact">CHÍNH SÁCH</p>
+                    <p className="title_contact">POLICIES</p>
                 </div>
                 <div className="content_contact">
                     <ul>
-                        <li className="address_contact"> <Link to="/cstv">Chính sách thành viên</Link></li>
-                        <li className="address_contact"><Link to="/csdt">Chính sách đổi trả</Link></li>
-                        <li className="address_contact"><Link to="/csvc">Chính sách vận chuyển</Link></li>
+                        <li className="address_contact"> <Link to="/cstv">Membership Policy</Link></li>
+                        <li className="address_contact"><Link to="/csdt">Return Policy</Link></li>
+                        <li className="address_contact"><Link to="/csvc">Shipping Policy</Link></li>
                     </ul>
                 </div>
             </li>
             <li>
                 <div className="item_title_contact">
-                    <p className="title_contact">ĐĂNG KÝ NHẬN TIN</p>
+                    <p className="title_contact">NEWSLETTER</p>
                 </div>
                 <div className="content_contact">
                     <ul>
-                        <li className="address_contact">Nhận thông tin sản phẩm mới nhất</li>
-                        <li className="address_contact">Thông tin sản phẩm khuyến mại</li>
+                        <li className="address_contact">Get the latest product updates</li>
+                        <li className="address_contact">Special offers & promotions</li>
                     </ul>
                 </div>
             </li>
             <li>
                 <div className="item_title_contact">
-                    <p className="title_contact">KẾT NỐI</p>
+                    <p className="title_contact">FOLLOW US</p>
                 </div>
                 <div className="content_contact">
                     <ul style={{display: 'flex', gap: '20px'}}>

@@ -1,0 +1,195 @@
+/* =========================
+   AUTHENTICATION PAGES
+   (Login & Register)
+   ========================= */
+
+.auth-container {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: 60px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.auth-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  padding: 50px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eeeeee;
+}
+
+.auth-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: #000000;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #888888;
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-group label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.auth-group input {
+  padding: 15px;
+  border: 2px solid #eeeeee;
+  border-radius: 4px;
+  font-size: 15px;
+  background: #fdfdfd;
+  transition: all 0.2s ease;
+  color: #000000;
+}
+
+.auth-group input:focus {
+  outline: none;
+  border-color: #000000;
+  background: #ffffff;
+}
+
+.auth-error {
+  background: #fff2f0;
+  color: #d32f2f;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-submit {
+  background: #000000;
+  color: #ffffff;
+  padding: 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.auth-submit:hover:not(:disabled) {
+  background: #EE5022;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(238, 80, 34, 0.3);
+}
+
+.auth-submit:disabled {
+  background: #dddddd;
+  cursor: not-allowed;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #555555;
+}
+
+.auth-link a {
+  color: #000000;
+  font-weight: 800;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.2s ease;
+}
+
+.auth-link a:hover {
+  color: #EE5022;
+}
+
+/* Header Dropdown for Auth */
+.user-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: -10px;
+  background: #ffffff;
+  min-width: 150px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  border: 1px solid #eeeeee;
+  margin-top: 15px;
+}
+
+.user-dropdown-container:hover .user-dropdown-menu {
+  display: flex;
+}
+
+/* Add a pseudo element bridge to prevent hover loss */
+.user-dropdown-container::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 20px;
+}
+
+.user-dropdown-menu a, .user-dropdown-menu button {
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown-menu a:hover, .user-dropdown-menu button:hover {
+  background: #f9f9f9;
+  color: #EE5022;
+}
+
+.user-dropdown-menu button {
+  width: 100%;
+}

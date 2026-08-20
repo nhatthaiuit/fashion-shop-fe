@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
-import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useAuth } from "../context/AuthContext.jsx";
 import "../styles/Checkout.css";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
@@ -14,7 +14,6 @@ export default function Checkout() {
 
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cod"); // cod | paypal | vnpay
-  const [paypalClientId, setPaypalClientId] = useState("");
 
   // Redirect if empty
   useEffect(() => {
@@ -23,12 +22,6 @@ export default function Checkout() {
     }
   }, [cart?.length, orderPlaced, nav]);
 
-  // Fetch PayPal Config
-  useEffect(() => {
-    axios.get(`${API}/api/payment/config/paypal`)
-      .then(res => setPaypalClientId(res.data.clientId))
-      .catch(err => console.error("PP Config Error", err));
-  }, []);
 
   const subtotal = useMemo(
     () => cart.reduce((s, it) => s + Number(it.price || 0) * Number(it.qty || 1), 0),
@@ -36,7 +29,31 @@ export default function Checkout() {
   );
   const total = subtotal; // Free shipping
 
+  const { user, token } = useAuth();
   const [form, setForm] = useState({ fullName: "", phone: "", address: "", note: "" });
+
+  useEffect(() => {
+    if (token) {
+      axios.get(`${API}/api/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        const data = res.data;
+        setForm(prev => ({
+          ...prev,
+          fullName: data.full_name || data.user_name || user?.user_name || prev.fullName,
+          phone: data.phone_number || prev.phone,
+          address: data.address || prev.address
+        }));
+      })
+      .catch(err => console.error("Fetch profile err:", err));
+    } else if (user) {
+      setForm(prev => ({
+        ...prev,
+        fullName: user.user_name || prev.fullName,
+      }));
+    }
+  }, [token, user]);
   const [placing, setPlacing] = useState(false);
   const [err, setErr] = useState("");
   const [touched, setTouched] = useState({});
@@ -62,6 +79,7 @@ export default function Checkout() {
     customer_name: form.fullName,
     items: cart.map((it) => ({ product_id: it._id, quantity: it.qty })),
     payment_method: paymentMethod,
+        user_id: user ? user.id : null,
     total_amount: total
   });
 
@@ -74,12 +92,22 @@ export default function Checkout() {
       setPlacing(true);
       const payload = createOrderPayload();
 
+      if (paymentMethod === 'paypal') {
+        payload.payment_result = {
+          id: "MOCK_PAYPAL_" + Date.now(),
+          status: "COMPLETED",
+          update_time: new Date().toISOString(),
+          email_address: "mockpayer@paypal.com"
+        };
+        payload.is_paid = true;
+        payload.paid_at = new Date();
+      }
+
       // 1. Create Order
       const res = await axios.post(`${API}/api/orders`, payload);
       const order = res.data;
 
       // 2. Handle Payment Redirect
-      // COD
       setOrderPlaced(true);
       clear();
       nav(`/thank-you/`, { replace: true, state: { order } });
@@ -92,41 +120,7 @@ export default function Checkout() {
     }
   };
 
-  // PayPal Handlers
-  const handlePaypalCreate = async (data, actions) => {
-    if (!validate()) return Promise.reject("Form invalid");
 
-    // Create Order in DB first? Or just Paypal Order?
-    // Best practice: Create PayPal order here.
-    return actions.order.create({
-      purchase_units: [{ amount: { value: (total / 25000).toFixed(2) } }] // Convert VND to USD roughly
-    });
-  };
-
-  const handlePaypalApprove = async (data, actions) => {
-    // Capture
-    const details = await actions.order.capture();
-
-    // Create/Update Order in Backend
-    try {
-      const payload = createOrderPayload();
-      payload.payment_result = {
-        id: details.id,
-        status: details.status,
-        update_time: details.update_time,
-        email_address: details.payer.email_address
-      };
-      payload.is_paid = true;
-      payload.paid_at = new Date(); // now
-
-      const res = await axios.post(`${API}/api/orders`, payload);
-      setOrderPlaced(true);
-      clear();
-      nav(`/thank-you/`, { replace: true, state: { order: res.data } });
-    } catch (e) {
-      setErr("Payment success but failed to create order: " + e.message);
-    }
-  };
 
   const isFieldInvalid = (n) => touched[n] && !form[n].trim();
 
@@ -176,22 +170,9 @@ export default function Checkout() {
 
             {err && <div className="error-message">⚠️ {err}</div>}
 
-            {paymentMethod === 'paypal' ? (
-              <div style={{ marginTop: 20 }}>
-                {paypalClientId && (
-                  <PayPalScriptProvider options={{ "client-id": paypalClientId }}>
-                    <PayPalButtons
-                      createOrder={handlePaypalCreate}
-                      onApprove={handlePaypalApprove}
-                    />
-                  </PayPalScriptProvider>
-                )}
-              </div>
-            ) : (
-              <button type="submit" disabled={placing} className="submit-button">
-                {placing ? "Processing..." : `Place Order (${paymentMethod.toUpperCase()})`}
-              </button>
-            )}
+            <button type="submit" disabled={placing} className="submit-button">
+              {placing ? "Processing..." : `Place Order (${paymentMethod.toUpperCase()})`}
+            </button>
           </form>
         </div>
 
@@ -201,17 +182,17 @@ export default function Checkout() {
             {cart.map(it => (
               <div key={it._id} className="order-item">
                 <img src={it.image} alt={it.name} className="order-item-image" />
-                <div>
-                  <div>{it.name}</div>
-                  <div>{Number(it.price).toLocaleString()}đ x {it.qty}</div>
+                <div className="order-item-details">
+                  <div className="order-item-name">{it.name}</div>
+                  <div className="order-item-price">{Number(it.price).toLocaleString()}đ x {it.qty}</div>
                 </div>
               </div>
             ))}
           </div>
           <div className="order-totals">
-            <div className="total">
-              <span>Total</span>
-              <span>{total.toLocaleString()}đ</span>
+            <div className="order-total-row total">
+              <span className="label">Total</span>
+              <span className="amount">{total.toLocaleString()}đ</span>
             </div>
           </div>
         </aside>

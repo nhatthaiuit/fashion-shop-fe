@@ -50,17 +50,22 @@ export default function Cart() {
           {cart.map((item) => {
             const subtotal = item.price * item.qty;
             return (
-              <div key={item._id} className="cart-item">
+              <div key={item.cartItemId || item._id} className="cart-item">
                 {/* Product Image */}
-                <img
-                  src={item.image}
-                  alt={item.product_name}
-                  className="cart-item-image"
-                />
+                <Link to={`/products/${item._id}`} style={{ display: 'block' }}>
+                  <img
+                    src={item.image}
+                    alt={item.product_name}
+                    className="cart-item-image"
+                  />
+                </Link>
 
                 {/* Product Details */}
                 <div className="cart-item-details">
-                  <h3 className="cart-item-name">{item.product_name}</h3>
+                  <Link to={`/products/${item._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <h3 className="cart-item-name">{item.product_name}</h3>
+                  </Link>
+                  {item.selectedSize && <p className="cart-item-size" style={{ margin: '4px 0', fontSize: '14px', color: '#666' }}>Size: <strong>{item.selectedSize}</strong></p>}
                   <p className="cart-item-price">{item.price.toLocaleString()}đ</p>
                   <p className="cart-item-subtotal">
                     Subtotal: {subtotal.toLocaleString()}đ
@@ -70,7 +75,7 @@ export default function Cart() {
                   <div className="cart-item-quantity">
                     <button
                       className="qty-btn"
-                      onClick={() => decrementQty(item._id, item.qty)}
+                      onClick={() => decrementQty(item.cartItemId || item._id, item.qty)}
                       disabled={item.qty <= 1}
                       aria-label="Decrease quantity"
                     >
@@ -82,14 +87,14 @@ export default function Cart() {
                       value={item.qty}
                       onChange={(e) => {
                         const value = parseInt(e.target.value) || 1;
-                        setQty(item._id, Math.max(1, value));
+                        setQty(item.cartItemId || item._id, Math.max(1, value));
                       }}
                       className="qty-input"
                       aria-label="Quantity"
                     />
                     <button
                       className="qty-btn"
-                      onClick={() => incrementQty(item._id, item.qty)}
+                      onClick={() => incrementQty(item.cartItemId || item._id, item.qty)}
                       aria-label="Increase quantity"
                     >
                       +
@@ -101,7 +106,7 @@ export default function Cart() {
                 <div className="cart-item-actions">
                   <button
                     className="remove-btn"
-                    onClick={() => remove(item._id)}
+                    onClick={() => remove(item.cartItemId || item._id)}
                   >
                     Remove
                   </button>

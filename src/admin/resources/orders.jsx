@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   List,
   Datagrid,
@@ -14,7 +15,10 @@ import {
   FunctionField,
   Toolbar,
   SaveButton,
+  TopToolbar,
+  EditButton,
 } from "react-admin";
+import { Box, Grid, Card, CardContent, Typography, Chip, Divider , Button } from '@mui/material';
 import { CustomOrderListActions } from '../components/CustomOrderListActions';
 import { orderExporter } from '../components/CustomOrderExporter';
 import '../styles/AdminStyles.css';
@@ -32,7 +36,17 @@ const orderFilters = [
   <SelectInput key="status" source="status" label="Status" choices={statusChoices} />
 ];
 
-// LIST: /admin/orders
+const getStatusColor = (status) => {
+    switch(status) {
+        case 'pending': return 'warning';
+        case 'processing': return 'info';
+        case 'shipped': return 'secondary';
+        case 'completed': return 'success';
+        case 'cancelled': return 'error';
+        default: return 'default';
+    }
+};
+
 export const OrderList = (props) => (
   <List
     {...props}
@@ -47,151 +61,151 @@ export const OrderList = (props) => (
         label="ID"
         render={record => record.id ? record.id.substring(0, 8) + '...' : ''}
       />
-      <NumberField source="total_amount" label="Total" />
+      <FunctionField 
+        label="Total" 
+        render={record => new Intl.NumberFormat('vi-VN').format(record.total_amount) + ' VNĐ'}
+      />
       <TextField source="customer_name" label="Name" />
       <TextField source="phone" label="Phone" />
       <TextField source="shipping_address" label="Address" />
-      <TextField source="status" />
+      <FunctionField 
+        label="Status" 
+        render={record => <Chip label={record.status.toUpperCase()} color={getStatusColor(record.status)} size="small" sx={{ fontWeight: 'bold' }} />}
+      />
       <DateField source="created_at" showTime label="Created at" />
     </Datagrid>
   </List>
 );
 
-// SHOW: /admin/orders/:id/show
-// SHOW: /admin/orders/:id/show
+
+const OrderShowActions = () => {
+    const navigate = useNavigate();
+    return (
+        <TopToolbar sx={{ gap: 2, alignItems: 'center' }}>
+            <Button variant="outlined" onClick={() => navigate('/admin/orders')} size="small" sx={{ height: 36, color: '#000', borderColor: '#ccc', px: 3, '&:hover': { backgroundColor: '#f9f9f9', borderColor: '#000' }, borderRadius: 1, fontWeight: 'bold' }}>
+                Back
+            </Button>
+            <EditButton sx={{ height: 36, borderRadius: 1, px: 2 }} />
+        </TopToolbar>
+    );
+};
+
 export const OrderShow = (props) => (
-  <Show {...props} component="div">
-    <SimpleShowLayout className="order-detail-v2">
-      {/* Order ID Card */}
-      <div className="order-card-v2">
-        <h3 className="card-title-v2">Order ID</h3>
-        <div className="id-status-row">
-          <FunctionField
-            render={record => (
-              <span className="order-id-text">{record.id}</span>
-            )}
-          />
-          <FunctionField
-            render={record => {
-              const statusColors = {
-                pending: '#ff9800',
-                processing: '#2196f3',
-                shipped: '#9c27b0',
-                completed: '#4caf50',
-                cancelled: '#f44336'
-              };
-              return (
-                <span
-                  className="status-badge-v2"
-                  style={{ background: statusColors[record.status] || '#666' }}
-                >
-                  {record.status}
-                </span>
-              );
-            }}
-          />
-        </div>
-      </div>
+  <Show {...props} component="div" actions={<OrderShowActions />}>
 
-      {/* Two Column Layout */}
-      <div className="order-grid">
-        {/* Left Column - Customer Info */}
-        <div className="order-card-v2">
-          <h3 className="card-title-v2">Customer</h3>
-          <div className="info-row">
-            <span className="info-label">Name</span>
-            <TextField source="customer_name" className="info-value" />
-          </div>
-          <div className="info-row">
-            <span className="info-label">Phone</span>
-            <TextField source="phone" className="info-value" />
-          </div>
-          <div className="info-row">
-            <span className="info-label">Address</span>
-            <TextField source="shipping_address" className="info-value" />
-          </div>
-        </div>
+    <SimpleShowLayout sx={{ p: 0, m: 0, '& .RaSimpleShowLayout-row': { display: 'block', padding: 0, border: 'none' } }}>
+      <Box sx={{ maxWidth: 1000, margin: '0 auto', p: 3, width: '100%' }}>
+        <Grid container spacing={3}>
+            
+            <Grid size={{ xs: 12 }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2 }}>
+                    <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 3 }}>
+                        <Box>
+                            <Typography variant="overline" color="textSecondary">Order ID</Typography>
+                            <FunctionField render={record => <Typography variant="h5" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{record.id}</Typography>} />
+                        </Box>
+                        <FunctionField render={record => <Chip label={record.status.toUpperCase()} color={getStatusColor(record.status)} sx={{ fontWeight: 'bold', px: 2, py: 2.5, fontSize: '1rem', borderRadius: 8 }} />} />
+                    </CardContent>
+                </Card>
+            </Grid>
 
-        {/* Right Column - Order Info */}
-        <div className="order-card-v2">
-          <h3 className="card-title-v2">Order Details</h3>
-          <div className="info-row">
-            <span className="info-label">Total Amount</span>
-            <FunctionField
-              render={record => (
-                <span className="total-value">
-                  {new Intl.NumberFormat('vi-VN').format(record.total_amount)} VNĐ
-                </span>
-              )}
-            />
-          </div>
-          <div className="info-row">
-            <span className="info-label">Order Date</span>
-            <DateField source="created_at" showTime className="info-value" />
-          </div>
-          <div className="info-row">
-            <span className="info-label">Last Updated</span>
-            <DateField source="updated_at" showTime className="info-value" />
-          </div>
-        </div>
-      </div>
+            <Grid size={{ xs: 12, md: 6 }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%' }}>
+                    <CardContent sx={{ p: 3 }}>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Customer Details</Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Typography color="textSecondary">Name</Typography>
+                            <TextField source="customer_name" sx={{ fontWeight: 500 }} />
+                        </Box>
+                        <Divider />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
+                            <Typography color="textSecondary">Phone</Typography>
+                            <TextField source="phone" sx={{ fontWeight: 500 }} />
+                        </Box>
+                        <Divider />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Typography color="textSecondary">Address</Typography>
+                            <TextField source="shipping_address" sx={{ fontWeight: 500, textAlign: 'right', maxWidth: '60%' }} />
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Grid>
 
-      {/* Items Card */}
-      <div className="order-card-v2">
-        <h3 className="card-title-v2">Items</h3>
-        <ArrayField source="items">
-          <Datagrid bulkActionButtons={false} className="items-table-clean">
-            <FunctionField
-              label="Product"
-              render={record => {
-                if (!record.product_id) {
-                  return <span className="product-deleted">Product Deleted</span>;
-                }
-                if (record.product_id?.product_name) {
-                  return record.product_id.product_name;
-                }
-                if (typeof record.product_id === 'string' && record.product_id) {
-                  return `ID: ${record.product_id.substring(0, 8)}...`;
-                }
-                if (record.product_id?._id) {
-                  return `ID: ${record.product_id._id.substring(0, 8)}...`;
-                }
-                return <span className="product-deleted">Unknown Product</span>;
-              }}
-            />
-            <FunctionField
-              label="Unit Price"
-              render={record => (
-                <span>{new Intl.NumberFormat('vi-VN').format(record.unit_price)} VNĐ</span>
-              )}
-            />
-            <NumberField source="quantity" label="Qty" />
-            <FunctionField
-              label="Subtotal"
-              render={record => (
-                <span className="subtotal-value">
-                  {new Intl.NumberFormat('vi-VN').format(record.unit_price * record.quantity)} VNĐ
-                </span>
-              )}
-            />
-          </Datagrid>
-        </ArrayField>
-      </div>
+            <Grid size={{ xs: 12, md: 6 }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, height: '100%' }}>
+                    <CardContent sx={{ p: 3 }}>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Order Summary</Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Typography color="textSecondary">Total Amount</Typography>
+                            <FunctionField render={record => <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>{new Intl.NumberFormat('vi-VN').format(record.total_amount)} VNĐ</Typography>} />
+                        </Box>
+                        <Divider />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', my: 2 }}>
+                            <Typography color="textSecondary">Order Date</Typography>
+                            <DateField source="created_at" showTime sx={{ fontWeight: 500 }} />
+                        </Box>
+                        <Divider />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Typography color="textSecondary">Last Updated</Typography>
+                            <DateField source="updated_at" showTime sx={{ fontWeight: 500 }} />
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Grid>
+
+            <Grid size={{ xs: 12 }}>
+                <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2 }}>
+                    <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+                        <Box sx={{ p: 3, pb: 1 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 600 }}>Order Items</Typography>
+                        </Box>
+                        <ArrayField source="items">
+                            <Datagrid bulkActionButtons={false} sx={{ '& .RaDatagrid-table': { borderBottom: 'none' }, '& tr:last-child td': { borderBottom: 'none' }, '& .RaDatagrid-root': { border: 'none', boxShadow: 'none' } }}>
+                                <FunctionField
+                                    label="Product"
+                                    render={record => {
+                                        if (!record.product_id) return "Product Deleted";
+                                        if (record.product_id?.product_name) return record.product_id.product_name;
+                                        if (typeof record.product_id === 'string') return `ID: ${record.product_id.substring(0, 8)}...`;
+                                        if (record.product_id?._id) return `ID: ${record.product_id._id.substring(0, 8)}...`;
+                                        return "Unknown Product";
+                                    }}
+                                />
+                                <FunctionField label="Unit Price" render={record => new Intl.NumberFormat('vi-VN').format(record.unit_price) + ' VNĐ'} />
+                                <NumberField source="quantity" label="Qty" />
+                                <FunctionField label="Subtotal" render={record => <Typography fontWeight="600">{new Intl.NumberFormat('vi-VN').format(record.unit_price * record.quantity)} VNĐ</Typography>} />
+                            </Datagrid>
+                        </ArrayField>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
+      </Box>
     </SimpleShowLayout>
   </Show>
 );
 
-// EDIT: chỉ cho đổi status
-const OrderEditToolbar = props => (
-  <Toolbar {...props}>
-    <SaveButton />
+const OrderEditToolbar = props => {
+  const navigate = useNavigate();
+  return (
+  <Toolbar {...props} sx={{ backgroundColor: 'transparent', display: 'flex', justifyContent: 'flex-end', borderTop: 'none', px: 2, gap: 2 }}>
+    <Button variant="outlined" onClick={() => navigate('/admin/orders')} size="large" sx={{ color: '#000', borderColor: '#ccc', px: 4, py: 1, '&:hover': { backgroundColor: '#f9f9f9', borderColor: '#000' }, borderRadius: '8px', fontWeight: 'bold' }}>
+        Back
+    </Button>
+    <SaveButton alwaysEnable variant="contained" size="large" sx={{ backgroundColor: '#000', color: '#fff', px: 4, py: 1, '&:hover': { backgroundColor: '#333' }, borderRadius: '8px', fontWeight: 'bold' }} />
   </Toolbar>
-);
+  );
+};
 
 export const OrderEdit = (props) => (
-  <Edit {...props}>
-    <SimpleForm toolbar={<OrderEditToolbar />}>
-      <SelectInput source="status" choices={statusChoices} />
+  <Edit {...props} component="div" actions={false}>
+    <SimpleForm toolbar={<OrderEditToolbar />} sx={{ width: "100%", maxWidth: 600, margin: "0 auto", mt: 3, "& .MuiStack-root": { width: "100%" }, "& .RaSimpleForm-toolbar": { p: 0, mt: 2 } }}>
+        <Card sx={{ border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, width: '100%' }}>
+            <CardContent sx={{ p: 4 }}>
+                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>Update Order Status</Typography>
+                <SelectInput source="status" choices={statusChoices} fullWidth variant="outlined" />
+            </CardContent>
+        </Card>
     </SimpleForm>
   </Edit>
 );

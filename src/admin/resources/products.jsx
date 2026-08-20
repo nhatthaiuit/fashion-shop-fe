@@ -1,20 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import {
     List, Datagrid, TextField, NumberField, EditButton,
     Edit, SimpleForm, TextInput, NumberInput, Create,
     Toolbar, SaveButton, required, SelectInput,
-    ArrayInput, SimpleFormIterator, ImageField, FunctionField,
+    ArrayInput, SimpleFormIterator, ImageField, ImageInput, FunctionField,
     TextInput as FilterTextInput, SelectInput as FilterSelectInput
 } from 'react-admin';
+import { Box, Grid, Card, CardContent, Typography, Button } from '@mui/material';
 import { StockField } from '../components/StockField';
 import { productExporter } from '../components/CustomExporter';
 import { CustomListActions } from '../components/CustomListActions';
 import '../styles/AdminStyles.css';
-
-const ProductToolbar = (props) => (
-    <Toolbar {...props}>
-        <SaveButton alwaysEnable />
-    </Toolbar>
-);
 
 const productFilters = [
     <FilterSelectInput key="category" label="Category" source="category" choices={[
@@ -47,69 +43,88 @@ export const ProductList = (props) => (
     </List>
 );
 
+const FormContent = () => {
+    const navigate = useNavigate();
+    return (
+    <Box sx={{ width: '100%', p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3, gap: 2 }}>
+            <Button variant="outlined" onClick={() => navigate('/admin/products')} size="large" sx={{ color: '#000', borderColor: '#ccc', px: 4, py: 1, '&:hover': { backgroundColor: '#f9f9f9', borderColor: '#000' }, borderRadius: '8px', fontWeight: 'bold' }}>
+                Back
+            </Button>
+            <SaveButton alwaysEnable variant="contained" size="large" sx={{ backgroundColor: '#000', color: '#fff', px: 4, py: 1, '&:hover': { backgroundColor: '#333' }, borderRadius: '8px', fontWeight: 'bold' }} />
+        </Box>
 
+        <Grid container spacing={3}>
+            {/* ROW 1 */}
+            <Grid size={{ xs: 12, md: 7 }}>
+                <Box sx={{ height: '100%', bgcolor: "#fff", border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, p: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Basic Information</Typography>
+                    <TextInput source="product_name" label="Product Name" validate={[required()]} fullWidth variant="outlined" />
+                    <TextInput source="description" multiline rows={5} fullWidth variant="outlined" />
+                </Box>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 5 }}>
+                <Box sx={{ height: '100%', bgcolor: "#fff", border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, p: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Classification & Pricing</Typography>
+                    <SelectInput source="category" choices={[
+                        { id: 'Top', name: 'Top' },
+                        { id: 'Bottom', name: 'Bottom' },
+                        { id: 'Accessories', name: 'Accessories' },
+                        { id: 'Sale', name: 'Sale' },
+                    ]} validate={[required()]} fullWidth variant="outlined" />
+                    <NumberInput source="price" label="Regular Price (VND)" validate={[required()]} fullWidth variant="outlined" />
+                    <NumberInput source="original_price" label="Sale Price (VND)" fullWidth variant="outlined" />
+                </Box>
+            </Grid>
+
+            {/* ROW 2 */}
+            <Grid size={{ xs: 12, md: 7 }}>
+                <Box sx={{ height: '100%', bgcolor: "#fff", border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, p: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Inventory & Sizes</Typography>
+                    <ArrayInput source="sizes" label="" validate={[required()]}>
+                        <SimpleFormIterator inline sx={{ gap: 2, width: '100%', '& .RaSimpleFormIterator-form': { width: '100%', display: 'flex', gap: 2 } }}>
+                            <SelectInput fullWidth sx={{ flex: 1 }} source="label" label="Size" choices={[
+                                { id: 'XS', name: 'XS' },
+                                { id: 'S', name: 'S' },
+                                { id: 'M', name: 'M' },
+                                { id: 'L', name: 'L' },
+                                { id: 'XL', name: 'XL' },
+                                { id: 'XXL', name: 'XXL' },
+                            ]} validate={[required()]} variant="outlined" />
+                            <NumberInput fullWidth sx={{ flex: 1 }} source="stock" label="Stock Qty" min={0} defaultValue={0} validate={[required()]} variant="outlined" />
+                        </SimpleFormIterator>
+                    </ArrayInput>
+                </Box>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 5 }}>
+                <Box sx={{ height: '100%', bgcolor: "#fff", border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, p: 3 }}>
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Product Image</Typography>
+                    <Box sx={{ border: '1px dashed #ccc', borderRadius: 2, p: 2, textAlign: 'center', bgcolor: '#f9f9f9', height: 'calc(100% - 50px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <ImageInput source="image" label="" accept="image/*">
+                            <ImageField source="src" title="title" />
+                        </ImageInput>
+                    </Box>
+                </Box>
+            </Grid>
+        </Grid>
+    </Box>
+    );
+};
 
 export const ProductEdit = (props) => (
-    <Edit {...props}>
-        <SimpleForm toolbar={<ProductToolbar />}>
-            <TextInput source="product_name" label="Product Name" validate={[required()]} />
-            <NumberInput source="price" validate={[required()]} />
-            <SelectInput source="category" choices={[
-                { id: 'Top', name: 'Top' },
-                { id: 'Bottom', name: 'Bottom' },
-                { id: 'Accessories', name: 'Accessories' },
-                { id: 'Sale', name: 'Sale' },
-            ]} validate={[required()]} />
-
-            <ArrayInput source="sizes" label="Sizes" validate={[required()]}>
-                <SimpleFormIterator inline>
-                    <SelectInput source="label" choices={[
-                        { id: 'XS', name: 'XS' },
-                        { id: 'S', name: 'S' },
-                        { id: 'M', name: 'M' },
-                        { id: 'L', name: 'L' },
-                        { id: 'XL', name: 'XL' },
-                        { id: 'XXL', name: 'XXL' },
-                    ]} validate={[required()]} />
-                    <NumberInput source="stock" label="Stock" min={0} defaultValue={0} validate={[required()]} />
-                </SimpleFormIterator>
-            </ArrayInput>
-
-            <TextInput source="image" fullWidth validate={[required()]} />
-            <TextInput source="description" multiline rows={4} fullWidth />
+    <Edit {...props} component="div">
+        <SimpleForm toolbar={false} sx={{ width: "100%", maxWidth: 1200, margin: "0 auto", mt: 3, "& .MuiStack-root": { width: "100%" }, "& .RaSimpleForm-toolbar": { p: 0, mt: 2 } }}>
+            <FormContent />
         </SimpleForm>
     </Edit>
 );
 
-
 export const ProductCreate = (props) => (
-    <Create {...props}>
-        <SimpleForm toolbar={<ProductToolbar />}>
-            <TextInput source="product_name" label="Product Name" validate={[required()]} />
-            <NumberInput source="price" validate={[required()]} />
-            <SelectInput source="category" choices={[
-                { id: 'Top', name: 'Top' },
-                { id: 'Bottom', name: 'Bottom' },
-                { id: 'Accessories', name: 'Accessories' },
-                { id: 'Sale', name: 'Sale' },
-            ]} validate={[required()]} />
-
-            <ArrayInput source="sizes" label="Sizes" validate={[required()]}>
-                <SimpleFormIterator inline>
-                    <SelectInput source="label" choices={[
-                        { id: 'XS', name: 'XS' },
-                        { id: 'S', name: 'S' },
-                        { id: 'M', name: 'M' },
-                        { id: 'L', name: 'L' },
-                        { id: 'XL', name: 'XL' },
-                        { id: 'XXL', name: 'XXL' },
-                    ]} validate={[required()]} />
-                    <NumberInput source="stock" label="Stock" min={0} defaultValue={0} validate={[required()]} />
-                </SimpleFormIterator>
-            </ArrayInput>
-
-            <TextInput source="image" fullWidth validate={[required()]} />
-            <TextInput source="description" multiline rows={4} fullWidth />
+    <Create {...props} component="div">
+        <SimpleForm toolbar={false} sx={{ width: "100%", maxWidth: 1200, margin: "0 auto", mt: 3, "& .MuiStack-root": { width: "100%" }, "& .RaSimpleForm-toolbar": { p: 0, mt: 2 } }}>
+            <FormContent />
         </SimpleForm>
     </Create>
 );

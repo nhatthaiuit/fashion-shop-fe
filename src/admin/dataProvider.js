@@ -37,7 +37,7 @@ function buildQuery(params = {}) {
 
 /** Wrapper fetch: tự gắn Authorization nếu có token */
 async function req(path, { method = 'GET', body, headers = {} } = {}) {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers: {
@@ -77,15 +77,47 @@ function normalizeList(payload) {
   return { data: [], total: 0 };
 }
 
+
+/** Hàm hỗ trợ upload ảnh lên Cloudinary qua API của Backend */
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('auth_token');
+  const res = await fetch(`${API_BASE}/api/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: formData
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Error uploading image');
+  }
+  const data = await res.json();
+  return data.url;
+}
+
+/** Chuyển đổi dữ liệu trước khi gửi lên (Xử lý upload ảnh nếu có) */
+async function convertData(data) {
+  const newData = { ...data };
+  if (newData.image && newData.image.rawFile) {
+    // Đây là file mới được chọn từ máy
+    const url = await uploadImage(newData.image.rawFile);
+    newData.image = url;
+  }
+  return newData;
+}
+
 export const dataProvider = {
 
   async getList(resource, params) {
     const qs = buildQuery(params);
     const url = `/api/${resource}${qs ? `?${qs}` : ''}`;
-    console.log('[DP] getList:', { resource, url, params });
-    const { res, payload } = await req(url);
-    console.log('[DP] payload:', payload);
-
+        const { res, payload } = await req(url);
+    
     // ✅ Fix: React Admin yêu cầu return { data, total }
     let data = [];
     let total = 0;
@@ -106,8 +138,7 @@ export const dataProvider = {
       total = payload.total ?? payload.data.length;
     }
 
-    console.log('[DP] return dataProvider:', { data, total }); // kiểm tra trước khi return
-    return { data, total };
+        return { data, total };
   },
 
   async getOne(resource, params) {
@@ -134,10 +165,11 @@ export const dataProvider = {
   },
 
   async update(resource, params) {
-    // Orders resource needs PUT method, others use PATCH
-    // Orders & Products need PUT method
     const method = 'PUT';
-    const { payload } = await req(`/api/${resource}/${params.id}`, { method, body: params.data });
+    // Xử lý upload ảnh trước nếu có
+    const convertedData = await convertData(params.data);
+    
+    const { payload } = await req(`/api/${resource}/${params.id}`, { method, body: convertedData });
     const doc = payload.data || payload;
     return { data: withId(doc) };
   },
@@ -150,7 +182,10 @@ export const dataProvider = {
   },
 
   async create(resource, params) {
-    const { payload } = await req(`/api/${resource}`, { method: 'POST', body: params.data });
+    // Xử lý upload ảnh trước nếu có
+    const convertedData = await convertData(params.data);
+
+    const { payload } = await req(`/api/${resource}`, { method: 'POST', body: convertedData });
     const doc = payload.data || payload;
     return { data: withId(doc) };
   },

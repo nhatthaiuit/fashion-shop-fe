@@ -47,23 +47,14 @@ export default function Home() {
       <HeroBanner />
       <CategoryTiles />
       
-      <h1 className="title_home_product">NEW ARRIVAL</h1>
+      
       <div className="products_home">
         {list.slice(0, 12).map((p) => (
           <ProductCard key={p._id || p.id} p={p} />
         ))}
       </div>
 
-      <h1 className="title_home_poster">Poster</h1>
-      <div className="slick-carousel-wrapper" style={{width: '90%', margin: '0 auto'}}>
-          <Slider {...sliderSettings}>
-              {posters.map((src, i) => (
-                  <div key={i}>
-                      <img src={src} alt={`Poster ${i+1}`} className="image_poster" style={{width: '100%', padding: '5px'}} />
-                  </div>
-              ))}
-          </Slider>
-      </div>
+      
       <br/><br/>
     </div>
   );

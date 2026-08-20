@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
 import { Link } from "react-router-dom";
+import ProductCard from "../components/products/ProductCard";
 import "../styles/Home.css";
 
 const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
@@ -36,18 +37,7 @@ export default function Category({ title, category }) {
           <p style={{textAlign: 'center', width: '100%'}}>No products found in this category.</p>
         ) : (
           list.map((p) => (
-            <div key={p._id} className="item_products_home">
-              <div className="image_home_item">
-                  <Link to={`/products/${p._id}`}>
-                      <img src={p.image || "/img/products/default.jpg"} alt={p.name} className="image_products_home" />
-                  </Link>
-              </div>
-              <h4 className="infProducts_home">{p.product_name || p.name}</h4>
-              <p className="infProducts_home">{Number(p.price || 0).toLocaleString()} VND</p>
-              <div style={{textAlign: 'center', marginTop: '15px'}}>
-                  <button className="btn_add_cart" onClick={() => add(p, 1)}>+ ADD TO CART</button>
-              </div>
-            </div>
+            <ProductCard key={p._id} p={p} />
           ))
         )}
       </div>

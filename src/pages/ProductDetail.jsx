@@ -14,6 +14,7 @@ export default function ProductDetail() {
   const { id } = useParams();
   const { add } = useCart();
 
+
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -101,9 +102,24 @@ export default function ProductDetail() {
         {/* Thông tin sản phẩm */}
         <div className="pt-20">
           <h2 className="text-3xl font-bold mb-4">{product.product_name}</h2>
-          <p className="text-xl mb-4 text-red-600 font-semibold">
-            {Number(product.price || 0).toLocaleString()}đ
-          </p>
+          
+          {product.original_price && product.original_price > product.price ? (
+            <div className="mb-4" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <p className="text-xl text-red-600 font-semibold m-0">
+                    {Number(product.price || 0).toLocaleString()}đ
+                </p>
+                <p style={{ textDecoration: 'line-through', color: '#888', margin: 0 }}>
+                    {Number(product.original_price).toLocaleString()}đ
+                </p>
+                <div className="discount-badge-detail">
+                    -{Math.round(((product.original_price - product.price) / product.original_price) * 100)}%
+                </div>
+            </div>
+          ) : (
+            <p className="text-xl mb-4 text-red-600 font-semibold">
+                {Number(product.price || 0).toLocaleString()}đ
+            </p>
+          )}
 
           <p className="product_detail_desc">
             {product.description || "No description available"}
@@ -162,9 +178,9 @@ export default function ProductDetail() {
             className="btn_add_to_cart"
             disabled={outOfStock || (canSelectSize && !selectedSize)}
             onClick={() => add({ ...product, selectedSize }, qty)}
-            title={outOfStock ? "Out of Stock" : (canSelectSize && !selectedSize ? "Please select a size" : "Add to Cart")}
+            title={outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "PLEASE SELECT A SIZE" : "ADD TO CART")}
           >
-            {outOfStock ? "Out of Stock" : "+ Add to Cart"}
+            {outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "SELECT SIZE TO ADD" : "+ ADD TO CART")}
           </button>
         </div>
       </div>
@@ -185,7 +201,7 @@ export default function ProductDetail() {
                   <img
                     src={p.image || "/img/products/default.jpg"}
                     alt={p.name}
-                    onError={(e) => (e.currentTarget.src = "/img/products/default.jpg")}
+                    onError={(e) => { if (e.currentTarget.src !== window.location.origin + "/img/products/default.jpg") { e.currentTarget.src = "/img/products/default.jpg"; } }}
                   />
                 </div>
                 <div className="related_body">

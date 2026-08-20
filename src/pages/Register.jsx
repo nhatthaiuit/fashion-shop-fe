@@ -1,30 +1,85 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+
+const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
+
 export default function Register() {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    user_name: "",
+    email: "",
+    password: "",
+    full_name: "",
+    phone_number: "",
+    address: ""
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: gọi API đăng ký nếu có
-    alert("Đăng ký (demo) thành công!");
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await axios.post(`${API}/api/auth/register`, formData);
+      const { token, user } = res.data;
+      
+      login(token, user);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <main className="register_container">
-      <h2 className="section_title">REGISTER</h2>
-      <form className="register_form" onSubmit={handleSubmit}>
-        <div className="form_row">
-          <label>User Name</label>
-          <input name="user_name" type="text" required placeholder="johndoe" />
+    <main className="auth-container">
+      <div className="auth-box">
+        <h1 className="auth-title">Create Account</h1>
+        <p className="auth-subtitle">Join UIT Store for an exclusive experience</p>
+        
+        {error && <div className="auth-error">{error}</div>}
+        
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-group">
+            <label>Username</label>
+            <input type="text" name="user_name" value={formData.user_name} onChange={handleChange} required />
+          </div>
+          <div className="auth-group">
+            <label>Email Address</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className="auth-group">
+            <label>Password</label>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+          </div>
+          <div className="auth-group">
+            <label>Full Name (Optional)</label>
+            <input type="text" name="full_name" value={formData.full_name} onChange={handleChange} />
+          </div>
+          <div className="auth-group">
+            <label>Phone Number (Optional)</label>
+            <input type="text" name="phone_number" value={formData.phone_number} onChange={handleChange} />
+          </div>
+          
+          <button type="submit" className="auth-submit" disabled={loading}>
+            {loading ? "Creating..." : "Create Account"}
+          </button>
+        </form>
+        
+        <div className="auth-link">
+          Already have an account? <Link to="/login">Sign In</Link>
         </div>
-        <div className="form_row">
-          <label>Email</label>
-          <input name="email" type="email" required placeholder="you@example.com" />
-        </div>
-        <div className="form_row">
-          <label>Password</label>
-          <input type="password" required placeholder="••••••••" />
-        </div>
-        <button className="btn_primary" type="submit">
-          Create account
-        </button>
-      </form>
+      </div>
     </main>
   );
 }
