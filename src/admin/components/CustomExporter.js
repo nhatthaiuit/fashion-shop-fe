@@ -11,8 +11,8 @@ export const productExporter = (products) => {
             : '';
 
         return {
-            id: product._id ? product._id.substring(0, 8) : '',
-            name: product.name,
+            id: product.id ? String(product.id).substring(0, 8) : (product._id ? String(product._id).substring(0, 8) : ''),
+            name: product.product_name || product.name || '',
             price: product.price,
             category: product.category,
             stock: product.count_in_stock,

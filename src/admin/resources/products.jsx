@@ -32,11 +32,16 @@ export const ProductList = (props) => (
         <Datagrid bulkActionButtons={<></>}>
             <FunctionField
                 label="ID"
-                render={record => record._id ? record._id.substring(0, 8) + '...' : ''}
+                render={record => (record.id || record._id) ? String(record.id || record._id).substring(0, 8) + '...' : ''}
             />
             <ImageField source="image" label="Image" />
             <TextField source="product_name" label="Product Name" />
-            <NumberField source="price" label="Price (VND)" />
+            <TextField source="category" label="Category" />
+            <FunctionField
+                source="price"
+                label="Price"
+                render={record => record.price != null ? new Intl.NumberFormat('en-US').format(record.price) + ' VND' : '0 VND'}
+            />
             <StockField source="count_in_stock" label="Stock" />
             <EditButton />
         </Datagrid>

@@ -10,6 +10,7 @@ export const orderExporter = (orders) => {
             ? order.items.map(item => {
                 // Try multiple ways to get product name
                 const productName = item.product_name
+                    || item.product_id?.product_name
                     || item.product_id?.name
                     || (typeof item.product_id === 'string' ? item.product_id.substring(0, 8) + '...' : 'Unknown');
                 return `${productName} x${item.quantity}`;
