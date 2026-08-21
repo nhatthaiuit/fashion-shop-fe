@@ -1,3 +1,4 @@
+import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import {
     List, Datagrid, TextField, NumberField, EditButton,
@@ -61,6 +62,35 @@ const validateSizes = (value) => {
 
 const FormContent = () => {
     const navigate = useNavigate();
+    const sizes = useWatch({ name: 'sizes' }) || [];
+
+    // Kiểm tra nếu đã chọn Freesize
+    const hasFreesize = Array.isArray(sizes) && sizes.some(s => s?.label === 'Freesize' || s?.label === 'OneSize');
+    
+    // Kiểm tra nếu đã chọn size thông thường (XS, S, M, L, XL, XXL) hoặc có từ 2 dòng trở lên
+    const hasRegularSize = Array.isArray(sizes) && sizes.some(s => s?.label && s.label !== 'Freesize' && s.label !== 'OneSize');
+    const isMultipleRows = Array.isArray(sizes) && sizes.length > 1;
+
+    // Danh sách size: nếu đã có size thông thường thì dropdown KHÔNG có Freesize
+    const sizeChoices = (hasRegularSize || isMultipleRows)
+        ? [
+            { id: 'XS', name: 'XS' },
+            { id: 'S', name: 'S' },
+            { id: 'M', name: 'M' },
+            { id: 'L', name: 'L' },
+            { id: 'XL', name: 'XL' },
+            { id: 'XXL', name: 'XXL' },
+        ]
+        : [
+            { id: 'Freesize', name: 'Freesize' },
+            { id: 'XS', name: 'XS' },
+            { id: 'S', name: 'S' },
+            { id: 'M', name: 'M' },
+            { id: 'L', name: 'L' },
+            { id: 'XL', name: 'XL' },
+            { id: 'XXL', name: 'XXL' },
+        ];
+
     return (
     <Box sx={{ width: '100%', p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3, gap: 2 }}>
@@ -102,16 +132,17 @@ const FormContent = () => {
                         * Tip: For <strong>Freesize</strong> products (Accessories, standard clothing), choose <strong>Freesize</strong> with a single row.
                     </Typography>
                     <ArrayInput source="sizes" label="" validate={[required(), validateSizes]}>
-                        <SimpleFormIterator inline sx={{ gap: 2, width: '100%', '& .RaSimpleFormIterator-form': { width: '100%', display: 'flex', gap: 2 } }}>
-                            <SelectInput fullWidth sx={{ flex: 1 }} source="label" label="Size" choices={[
-                                { id: 'Freesize', name: 'Freesize' },
-                                { id: 'XS', name: 'XS' },
-                                { id: 'S', name: 'S' },
-                                { id: 'M', name: 'M' },
-                                { id: 'L', name: 'L' },
-                                { id: 'XL', name: 'XL' },
-                                { id: 'XXL', name: 'XXL' },
-                            ]} validate={[required()]} variant="outlined" />
+                        <SimpleFormIterator 
+                            inline 
+                            disableAdd={hasFreesize}
+                            sx={{ 
+                                gap: 2, 
+                                width: '100%', 
+                                '& .RaSimpleFormIterator-form': { width: '100%', display: 'flex', gap: 2 },
+                                ...(hasFreesize ? { '& .RaSimpleFormIterator-add': { display: 'none !important' } } : {})
+                            }}
+                        >
+                            <SelectInput fullWidth sx={{ flex: 1 }} source="label" label="Size" choices={sizeChoices} validate={[required()]} variant="outlined" />
                             <NumberInput fullWidth sx={{ flex: 1 }} source="stock" label="Stock Qty" min={0} defaultValue={0} validate={[required()]} variant="outlined" />
                         </SimpleFormIterator>
                     </ArrayInput>
