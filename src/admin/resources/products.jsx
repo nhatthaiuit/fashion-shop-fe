@@ -36,7 +36,7 @@ export const ProductList = (props) => (
             />
             <ImageField source="image" label="Image" />
             <TextField source="product_name" label="Product Name" />
-            <NumberField source="price" />
+            <NumberField source="price" label="Price (VND)" />
             <StockField source="count_in_stock" label="Stock" />
             <EditButton />
         </Datagrid>
@@ -73,8 +73,8 @@ const FormContent = () => {
                         { id: 'Accessories', name: 'Accessories' },
                         { id: 'Sale', name: 'Sale' },
                     ]} validate={[required()]} fullWidth variant="outlined" />
-                    <NumberInput source="price" label="Regular Price (VND)" validate={[required()]} fullWidth variant="outlined" />
-                    <NumberInput source="original_price" label="Sale Price (VND)" fullWidth variant="outlined" />
+                    <NumberInput source="price" label="Selling Price (VND) *" helperText="The price customer pays" validate={[required()]} fullWidth variant="outlined" />
+                    <NumberInput source="original_price" label="Original Price (VND)" helperText="Original price before discount (strikethrough)" fullWidth variant="outlined" />
                 </Box>
             </Grid>
 
