@@ -52,18 +52,22 @@ export default function ProductDetail() {
       .catch(() => { });
   }, [product?.category, product?._id]);
 
-  // ===== Logic according to category / sizes =====
-  const hasSizes = useMemo(
-    () => Array.isArray(product?.sizes) && product.sizes.length > 0 && product.sizes.some((s) => (s.stock || 0) > 0),
-    [product?.sizes]
-  );
-  const needSize = useMemo(
-    () => ["Top", "Bottom"].includes(product?.category),
-    [product?.category]
-  );
-  // Chỉ sản phẩm thuộc danh mục quần áo (Top, Bottom) mới hiển thị chọn size S, M, L, XL
-  // Danh mục Accessories (phụ kiện) sẽ tự động hiển thị One Size (Freesize)
-  const canSelectSize = needSize && hasSizes;
+  // ===== Logic Freesize vs Multiple Sizes =====
+  const isFreesize = useMemo(() => {
+    if (!product) return false;
+    const sizes = product.sizes || [];
+    if (sizes.length === 0) return true;
+    if (sizes.some((s) => s.label === "Freesize" || s.label === "OneSize")) return true;
+    return false;
+  }, [product]);
+
+  // Danh sách các size có thể chọn (nếu là sản phẩm phân loại size thông thường)
+  const selectableSizes = useMemo(() => {
+    if (!product?.sizes || isFreesize) return [];
+    return product.sizes.filter((s) => s.label !== "Freesize" && s.label !== "OneSize");
+  }, [product?.sizes, isFreesize]);
+
+  const canSelectSize = !isFreesize && selectableSizes.length > 0;
 
   const totalStock = useMemo(() => {
     if (!product) return 0;
@@ -79,16 +83,16 @@ export default function ProductDetail() {
   const stockAvailable = useMemo(() => {
     if (!product) return false;
     if (canSelectSize) {
-      return product.sizes.some((s) => (s.stock || 0) > 0);
+      return selectableSizes.some((s) => (s.stock || 0) > 0);
     }
     return totalStock > 0;
-  }, [product, canSelectSize, totalStock]);
+  }, [product, canSelectSize, selectableSizes, totalStock]);
 
   const outOfStock = !stockAvailable;
 
   const getStock = () => {
     if (canSelectSize && selectedSize) {
-      const s = product.sizes.find((x) => x.label === selectedSize);
+      const s = product.sizes?.find((x) => x.label === selectedSize);
       return s ? (s.stock || 0) : 0;
     }
     return totalStock;
@@ -97,7 +101,7 @@ export default function ProductDetail() {
   const selectedSizeStock = useMemo(() => {
     if (!product) return 0;
     return getStock();
-  }, [product, selectedSize, canSelectSize]);
+  }, [product, selectedSize, canSelectSize, totalStock]);
 
   if (loading) return <div className="loading">Loading product...</div>;
   if (error) return <div className="error">Error loading product: {error}</div>;
@@ -137,20 +141,37 @@ export default function ProductDetail() {
             {product.description || "No description available"}
           </p>
 
-          {/* Size Selector: render when product has configured sizes */}
-          {canSelectSize ? (
+          {/* Size Section */}
+          {isFreesize ? (
+            <div className="product_detail_size" style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", marginBottom: "8px" }}>Size:</label>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                <span 
+                  style={{ 
+                    fontWeight: 700, 
+                    color: "#ffffff", 
+                    padding: "6px 18px", 
+                    background: "#111111", 
+                    borderRadius: "4px", 
+                    fontSize: "14px", 
+                    letterSpacing: "0.5px",
+                    display: "inline-block",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.15)"
+                  }}
+                >
+                  Freesize
+                </span>
+                <span style={{ fontSize: "13px", color: "#666", fontStyle: "italic" }}>
+                  (Sản phẩm Freesize — Không cần chọn size)
+                </span>
+              </div>
+            </div>
+          ) : canSelectSize ? (
             <div className="product_detail_size">
               <label>Select Size:</label>
-              <SizeSelector sizes={product.sizes} onChange={setSelectedSize} />
+              <SizeSelector sizes={selectableSizes} onChange={setSelectedSize} />
             </div>
-          ) : (
-            <div className="product_detail_size" style={{ marginBottom: "16px" }}>
-              <label style={{ marginRight: "10px" }}>Size:</label>
-              <span style={{ fontWeight: 600, color: "#111", padding: "4px 12px", background: "#f3f4f6", borderRadius: "4px", fontSize: "14px", border: "1px solid #e5e7eb" }}>
-                One Size (Freesize)
-              </span>
-            </div>
-          )}
+          ) : null}
 
           {/* Quantity */}
           <div className="product_detail_qty">
@@ -173,8 +194,7 @@ export default function ProductDetail() {
                 onChange={(e) => setQty(Math.max(1, Math.min(Number(e.target.value || 1), selectedSizeStock)))}
                 disabled={outOfStock}
                 aria-label="Quantity"
-              >
-              </input>
+              />
               <button
                 type="button"
                 className="qty-btn"
@@ -191,7 +211,7 @@ export default function ProductDetail() {
           <button
             className="btn_add_to_cart"
             disabled={outOfStock || (canSelectSize && !selectedSize)}
-            onClick={() => add({ ...product, selectedSize: canSelectSize ? selectedSize : "OneSize" }, qty)}
+            onClick={() => add({ ...product, selectedSize: isFreesize ? "Freesize" : selectedSize }, qty)}
             title={outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "PLEASE SELECT A SIZE" : "ADD TO CART")}
           >
             {outOfStock ? "OUT OF STOCK" : (canSelectSize && !selectedSize ? "SELECT SIZE TO ADD" : "+ ADD TO CART")}

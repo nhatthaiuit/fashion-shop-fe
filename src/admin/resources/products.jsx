@@ -48,6 +48,17 @@ export const ProductList = (props) => (
     </List>
 );
 
+const validateSizes = (value) => {
+    if (!value || !Array.isArray(value) || value.length === 0) {
+        return "Please add at least one size or Freesize";
+    }
+    const hasFreesize = value.some(s => s?.label === 'Freesize' || s?.label === 'OneSize');
+    if (hasFreesize && value.length > 1) {
+        return "When Freesize is selected, no other sizes can be added. Please keep only 1 Freesize row.";
+    }
+    return undefined;
+};
+
 const FormContent = () => {
     const navigate = useNavigate();
     return (
@@ -87,9 +98,13 @@ const FormContent = () => {
             <Grid size={{ xs: 12, md: 7 }}>
                 <Box sx={{ height: '100%', bgcolor: "#fff", border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 2, p: 3 }}>
                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>Inventory & Sizes</Typography>
-                    <ArrayInput source="sizes" label="" validate={[required()]}>
+                    <Typography variant="body2" sx={{ color: '#666', mb: 1.5, fontSize: '13px' }}>
+                        * Tip: For <strong>Freesize</strong> products (Accessories, standard clothing), choose <strong>Freesize</strong> with a single row.
+                    </Typography>
+                    <ArrayInput source="sizes" label="" validate={[required(), validateSizes]}>
                         <SimpleFormIterator inline sx={{ gap: 2, width: '100%', '& .RaSimpleFormIterator-form': { width: '100%', display: 'flex', gap: 2 } }}>
                             <SelectInput fullWidth sx={{ flex: 1 }} source="label" label="Size" choices={[
+                                { id: 'Freesize', name: 'Freesize' },
                                 { id: 'XS', name: 'XS' },
                                 { id: 'S', name: 'S' },
                                 { id: 'M', name: 'M' },
