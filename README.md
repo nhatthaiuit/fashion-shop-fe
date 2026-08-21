@@ -9,9 +9,8 @@ A high-performance Single Page Application (SPA) built with React and Vite, feat
 ## 📖 Comprehensive Documentation
 For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and full project descriptions, please visit our **[Notion Workspace](#)** *(Link to be updated soon)*.
 
-## 🌐 Live Application
-- **Web UI**: **[https://fashion-shop-frontend-uit.vercel.app](https://fashion-shop-frontend-uit.vercel.app)**
-- **Backend API Docs**: **[https://fashion-shop-be-one.vercel.app/docs](https://fashion-shop-be-one.vercel.app/docs)**
+## 🌐 Live Demo
+[https://fashion-shop-frontend-uit.vercel.app](https://fashion-shop-frontend-uit.vercel.app)
 
 ### 🔐 Test Accounts (For Recruiters/Testers)
 - **Admin**: `newadmin` / `NewAdmin@2024`
