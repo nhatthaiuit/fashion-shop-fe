@@ -67,12 +67,11 @@ const FormContent = () => {
     // Kiểm tra nếu đã chọn Freesize
     const hasFreesize = Array.isArray(sizes) && sizes.some(s => s?.label === 'Freesize' || s?.label === 'OneSize');
     
-    // Kiểm tra nếu đã chọn size thông thường (XS, S, M, L, XL, XXL) hoặc có từ 2 dòng trở lên
-    const hasRegularSize = Array.isArray(sizes) && sizes.some(s => s?.label && s.label !== 'Freesize' && s.label !== 'OneSize');
+    // Khi có từ 2 dòng size trở lên: dropdown ở các dòng sẽ KHÔNG có Freesize (chỉ chọn các size thường XS, S, M...)
+    // Khi chỉ có 1 dòng duy nhất (hoặc chưa có dòng nào): dropdown hiển thị đầy đủ cả Freesize và các size thường để Admin linh hoạt chọn
     const isMultipleRows = Array.isArray(sizes) && sizes.length > 1;
 
-    // Danh sách size: nếu đã có size thông thường thì dropdown KHÔNG có Freesize
-    const sizeChoices = (hasRegularSize || isMultipleRows)
+    const sizeChoices = isMultipleRows
         ? [
             { id: 'XS', name: 'XS' },
             { id: 'S', name: 'S' },
@@ -119,7 +118,7 @@ const FormContent = () => {
                         { id: 'Accessories', name: 'Accessories' },
                         { id: 'Sale', name: 'Sale' },
                     ]} validate={[required()]} fullWidth variant="outlined" />
-                    <NumberInput source="price" label="Selling Price (VND) *" helperText="The price customer pays" validate={[required()]} fullWidth variant="outlined" />
+                    <NumberInput source="price" label="Selling Price (VND)" helperText="The price customer pays" validate={[required()]} fullWidth variant="outlined" />
                     <NumberInput source="original_price" label="Original Price (VND)" helperText="Original price before discount (strikethrough)" fullWidth variant="outlined" />
                 </Box>
             </Grid>
