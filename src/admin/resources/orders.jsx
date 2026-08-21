@@ -89,7 +89,7 @@ export const OrderList = (props) => (
   <List
     {...props}
     perPage={20}
-    sort={{ field: "created_at", order: "DESC" }}
+    sort={{ field: "updated_at", order: "DESC" }}
     actions={<CustomOrderListActions />}
     exporter={orderExporter}
     filters={orderFilters}
@@ -122,6 +122,7 @@ export const OrderList = (props) => (
             />
         )}
       />
+      <DateField source="updated_at" showTime label="Last Updated" />
       <DateField source="created_at" showTime label="Created at" />
     </Datagrid>
   </List>
@@ -153,7 +154,6 @@ export const OrderShow = (props) => (
                             <FunctionField render={record => <Typography variant="h5" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>{record.id}</Typography>} />
                         </Box>
                         <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
-                            <FunctionField render={renderPaymentMethodChip} />
                             <FunctionField render={record => <Chip label={record.status ? record.status.toUpperCase() : 'PENDING'} color={getStatusColor(record.status)} sx={{ fontWeight: 'bold', px: 2, py: 2.5, fontSize: '1rem', borderRadius: 8 }} />} />
                         </Box>
                     </CardContent>
