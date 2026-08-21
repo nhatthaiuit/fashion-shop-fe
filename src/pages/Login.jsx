@@ -22,7 +22,11 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await axios.post(`${API}/api/auth/login`, formData);
+      const payload = {
+        usernameOrEmail: formData.usernameOrEmail.trim(),
+        password: formData.password
+      };
+      const res = await axios.post(`${API}/api/auth/login`, payload);
       const { token, user } = res.data;
       
       login(token, user);
