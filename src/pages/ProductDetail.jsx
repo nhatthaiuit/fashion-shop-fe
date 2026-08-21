@@ -61,7 +61,19 @@ export default function ProductDetail() {
     () => ["Top", "Bottom"].includes(product?.category),
     [product?.category]
   );
-  const canSelectSize = hasSizes;
+  // Chỉ sản phẩm thuộc danh mục quần áo (Top, Bottom) mới hiển thị chọn size S, M, L, XL
+  // Danh mục Accessories (phụ kiện) sẽ tự động hiển thị One Size (Freesize)
+  const canSelectSize = needSize && hasSizes;
+
+  const totalStock = useMemo(() => {
+    if (!product) return 0;
+    const fromCount = Number(product.count_in_stock || 0);
+    if (fromCount > 0) return fromCount;
+    if (Array.isArray(product.sizes) && product.sizes.length > 0) {
+      return product.sizes.reduce((sum, s) => sum + Number(s.stock || 0), 0);
+    }
+    return 99;
+  }, [product]);
 
   // Available stock
   const stockAvailable = useMemo(() => {
@@ -69,8 +81,8 @@ export default function ProductDetail() {
     if (canSelectSize) {
       return product.sizes.some((s) => (s.stock || 0) > 0);
     }
-    return (product.count_in_stock || 0) > 0;
-  }, [product, canSelectSize]);
+    return totalStock > 0;
+  }, [product, canSelectSize, totalStock]);
 
   const outOfStock = !stockAvailable;
 
@@ -79,7 +91,7 @@ export default function ProductDetail() {
       const s = product.sizes.find((x) => x.label === selectedSize);
       return s ? (s.stock || 0) : 0;
     }
-    return product.count_in_stock || 99;
+    return totalStock;
   };
 
   const selectedSizeStock = useMemo(() => {
