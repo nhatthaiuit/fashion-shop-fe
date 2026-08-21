@@ -28,6 +28,7 @@ For detailed system architecture, UI/UX Wireframes, State Machine Diagrams, and 
 ## 📸 Screenshots
 
 <img width="800" height="452" alt="Image" src="https://github.com/user-attachments/assets/a0479a28-4156-4d9d-a2c1-8536270b02fb" />
+<img width="800" height="452" alt="Image" src="https://github.com/user-attachments/assets/c21d82eb-48fd-45f9-b005-19376b5ca325" />
 
 ## 🛠 Tech Stack
 
