@@ -26,6 +26,7 @@ export const ProductList = (props) => (
     <List
         {...props}
         perPage={25}
+        sort={{ field: "updated_at", order: "DESC" }}
         filters={productFilters}
         exporter={productExporter}
         actions={<CustomListActions />}
